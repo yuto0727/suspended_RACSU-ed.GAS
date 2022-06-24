@@ -57,22 +57,32 @@ function getTask(username, userid, authtoken, category){
 }
 
 function fetchSyllabus(code){
+  code = code.slice(0, 8);
   var url = `https://campus-3.shinshu-u.ac.jp/syllabusj/Display?NENDO=${this_year().toString()}&BUKYOKU=${code.slice(0,1)}&CODE=${code}`;
   var html = UrlFetchApp.fetch(url).getContentText("UTF-8");
 
-  var classname = Parser.data(html)
-  .from('<td colspan="7">')
+  var classname_A = Parser.data(html)
+  .from('授業名')
   .to('</td>')
-  .iterate();
+  .iterate()[0];
 
-  console.log(url);
+  var classname_B = Parser.data(html)
+  .from('科目名')
+  .to('</td>')
+  .iterate()[0];
 
-  if (classname[0] == "<!DOCTYPE html>"){
-    sendMessage([_text(`該当講義がない授業コードが検出されました。\n\nコード：${code}`)], [userID_admin], method="multicast", account="admin")
-    return "該当講義なし"
-  }else{
-    return classname[0];
+  console.log(classname_A, classname_B)
+
+  if (classname_A == "<!" && classname_B == "<!"){
+    sendMessage([_text(`該当講義がない授業コードが検出されました。\n\nコード：${code}`)], [userID_admin], method="multicast", account="admin");
+    var classname = "該当授業なし";
+  }else if (classname_A.indexOf("DOCTYPE") == -1){
+    var classname = classname_A.split('">')[1];
+  }else if (classname_B.indexOf("DOCTYPE") == -1){
+    var classname = classname_B.split('">')[1];
   }
+  
+  return classname;
 }
 
 function getClassName(code){
@@ -144,16 +154,6 @@ function saveTask(username, datalist){
   // 書式なしに設定
   set_excel_style_all_rownum(username+"_課題表", 7);
 }
-
-
-
-function test(){
-  saveTask("渡邊友翔", [[ '電子情報基礎実験(16T以降)', '課題０　最小二乗法の計算をしなさい', [ 4, 28, '23-59' ] ]])
-}
-
-
-
-
 
 function testID(category, userid, authtoken){
   var url = `https://lms.ealps.shinshu-u.ac.jp/${this_year()}/${category}/calendar/export_execute.php?userid=${userid}&authtoken=${authtoken}&preset_what=all&preset_time=recentupcoming`
