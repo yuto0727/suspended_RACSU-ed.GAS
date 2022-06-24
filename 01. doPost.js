@@ -30,7 +30,7 @@ function doPost(e) {
     delete_index("ID", userID);
   }
 
-  // メッセージ受診時
+  // メッセージ受信時
   if (type == "message"){
     var message = webhookData.message.text;
     var userName = getuserName(userID);
