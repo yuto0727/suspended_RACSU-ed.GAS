@@ -58,7 +58,12 @@ function getTask(username, userid, authtoken, category){
 
 function fetchSyllabus(code){
   code = code.slice(0, 8);
-  var url = `https://campus-3.shinshu-u.ac.jp/syllabusj/Display?NENDO=${this_year().toString()}&BUKYOKU=${code.slice(0,1)}&CODE=${code}`;
+  if (code.slice(0,1) == "Q"){ // 教職課程
+    var bukyoku = "G"
+  }else{
+    var bukyoku = code.slice(0,1)
+  }
+  var url = `https://campus-3.shinshu-u.ac.jp/syllabusj/Display?NENDO=${this_year().toString()}&BUKYOKU=${bukyoku}&CODE=${code}`;
   var html = UrlFetchApp.fetch(url).getContentText("UTF-8");
 
   var classname_A = Parser.data(html)
