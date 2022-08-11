@@ -25,7 +25,6 @@ function doPost(e) {
   // ブロック時
   if (type == "unfollow"){
     var userName = getuserName(userID)
-    delete_sheet(userName+"_時間割表");
     delete_sheet(userName+"_課題表");
     delete_index("ID", userID);
   }
