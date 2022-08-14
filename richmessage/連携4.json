@@ -1,0 +1,72 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "header": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "課題通知サービスRACSU",
+        "color": "#ffffff66",
+        "size": "sm"
+      },
+      {
+        "type": "text",
+        "text": "信大ACSUとの連携設定",
+        "color": "#ffffff",
+        "size": "xl",
+        "flex": 4,
+        "weight": "bold"
+      }
+    ],
+    "paddingAll": "20px",
+    "backgroundColor": "#1b5aad",
+    "spacing": "md",
+    "paddingTop": "22px"
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "下記ボタンからアクセスして、URLをコピーし送信してください。",
+        "wrap": true,
+        "weight": "bold"
+      },
+      {
+        "type": "text",
+        "text": "※「やめる」と送信すると中断できます。",
+        "wrap": true,
+        "margin": "lg",
+        "size": "xs",
+        "color": "#aaaaaa"
+      }
+    ],
+    "paddingBottom": "none"
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "uri",
+              "label": "共通教育URLにアクセスする",
+              "uri": "https://lms.ealps.shinshu-u.ac.jp/2022/g/calendar/export.php"
+            },
+            "color": "#ffffff"
+          }
+        ],
+        "backgroundColor": "#1b5aad",
+        "cornerRadius": "md"
+      }
+    ]
+  }
+}

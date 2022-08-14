@@ -1,0 +1,148 @@
+{
+    "type": "bubble",
+    "size": "mega",
+    "header": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "課題通知サービスRACSU",
+          "color": "#ffffff66",
+          "size": "sm"
+        },
+        {
+          "type": "text",
+          "text": "信大ACSUとの連携設定",
+          "color": "#ffffff",
+          "size": "xl",
+          "flex": 4,
+          "weight": "bold"
+        }
+      ],
+      "paddingAll": "20px",
+      "backgroundColor": "#1b5aad",
+      "spacing": "md",
+      "paddingTop": "22px"
+    },
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "①URLからACSUにログイン",
+          "wrap": true,
+          "weight": "bold",
+          "margin": "lg"
+        },
+        {
+          "type": "text",
+          "text": "②下記画像のように選択",
+          "wrap": true,
+          "weight": "bold",
+          "margin": "lg"
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "image",
+              "size": "full",
+              "aspectMode": "fit",
+              "url": "https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/278353/5cbb1f9e-74c8-535f-604e-aac365419a8b.jpeg"
+            }
+          ],
+          "borderColor": "#1b5aad",
+          "borderWidth": "normal",
+          "margin": "md"
+        },
+        {
+          "type": "text",
+          "text": "③下記画像に従ってURLをコピー",
+          "wrap": true,
+          "weight": "bold",
+          "margin": "30px"
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "image",
+              "size": "full",
+              "aspectMode": "fit",
+              "url": "https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/278353/29daff10-9bea-0d49-712a-cea24dbd0f51.jpeg"
+            }
+          ],
+          "borderColor": "#1b5aad",
+          "borderWidth": "normal",
+          "margin": "md"
+        },
+        {
+          "type": "text",
+          "text": "④このトークにURLを送信",
+          "wrap": true,
+          "weight": "bold",
+          "margin": "30px"
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "image",
+              "size": "full",
+              "aspectMode": "fit",
+              "url": "https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/278353/56a1be1a-911b-198e-0a46-0e88484fea87.jpeg"
+            }
+          ],
+          "borderColor": "#1b5aad",
+          "borderWidth": "normal",
+          "margin": "md"
+        },
+        {
+          "type": "text",
+          "text": "※「やめる」と送信すると中断できます。",
+          "wrap": true,
+          "margin": "lg",
+          "size": "xs",
+          "color": "#aaaaaa"
+        }
+      ],
+      "paddingBottom": "none"
+    },
+    "footer": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "手順を理解したので\n「共通教育」の設定をする",
+              "size": "md",
+              "color": "#ffffff",
+              "wrap": true,
+              "align": "center",
+              "action": {
+                "type": "message",
+                "text": "ステップ4へ"
+              }
+            }
+          ],
+          "backgroundColor": "#1b5aad",
+          "cornerRadius": "md",
+          "action": {
+            "type": "message",
+            "label": "action",
+            "text": "hello"
+          },
+          "paddingAll": "md"
+        }
+      ]
+    }
+  }

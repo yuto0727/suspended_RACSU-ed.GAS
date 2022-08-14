@@ -1,0 +1,85 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "header": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "課題通知サービスRACSU",
+        "color": "#ffffff66",
+        "size": "sm"
+      },
+      {
+        "type": "text",
+        "text": "信大ACSUとの連携設定",
+        "color": "#ffffff",
+        "size": "xl",
+        "flex": 4,
+        "weight": "bold"
+      }
+    ],
+    "paddingAll": "20px",
+    "backgroundColor": "#1b5aad",
+    "spacing": "md",
+    "paddingTop": "22px"
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "以上で設定は完了です！",
+        "wrap": true,
+        "weight": "bold",
+        "size": "lg"
+      },
+      {
+        "type": "text",
+        "text": "毎朝自動で新規課題を取得し、通知します！",
+        "wrap": true,
+        "margin": "md",
+        "color": "#ff0000",
+        "decoration": "underline"
+      },
+      {
+        "type": "text",
+        "text": "メニュー左下「今すぐ課題取得」から課題を取得できます。",
+        "wrap": true,
+        "margin": "md"
+      },
+      {
+        "type": "text",
+        "text": "↓ こちらからも取得できます！",
+        "wrap": true,
+        "margin": "xl"
+      }
+    ],
+    "paddingBottom": "none"
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "message",
+              "label": "課題を取得してみる！",
+              "text": "自動取得を実行"
+            },
+            "color": "#ffffff"
+          }
+        ],
+        "backgroundColor": "#1b5aad",
+        "cornerRadius": "md"
+      }
+    ]
+  }
+}
