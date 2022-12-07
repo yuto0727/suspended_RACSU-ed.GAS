@@ -43,17 +43,31 @@ function makeFinishFlag(userName, taskId_a){
   }
 }
 
-function getClassName_fromDB(userName, taskId_a){
+function getTaskData_fromDB(userName, taskId_a){
   var taskId_a_all = read_excel_value_all_rownum(userName+"_課題表", 1).flat();
   if (taskId_a_all.indexOf(taskId_a) !== -1){
     var lineNum = taskId_a_all.indexOf(taskId_a)+1;
-    return read_excel_value(userName+"_課題表", "c"+lineNum.toString());
+    return read_excel_value_all_linenum(userName+"_課題表", lineNum);
   }else{
     return "指定の課題が存在しません。"
   }
 }
 
+function getAlluserID(){
+  return read_excel_value_all_rownum("ID", 1).flat();
+}
+
+function getAlluserName(){
+  return read_excel_value_all_rownum("ID", 2).flat();
+}
+
 function makeFinishFlag_PastTask(userName){
+  if (userName == ""){
+    console.log("このユーザーは未登録です")
+    return;
+  }
+
+  console.log(userName, "処理開始")
 
   // 当日の日付取得
   var date = new Date();
@@ -69,13 +83,13 @@ function makeFinishFlag_PastTask(userName){
   for (var i = 2, len = flag_maked.length+1; i < len; ++i){
     if (flag_maked[i-1] == "" && Number(read_excel_value(userName+"_課題表", "h"+i.toString())) <= sort_num){
       write_excel_value(userName+"_課題表", "i"+i.toString(), "完了");
-      console.log("完了")
+      console.log("完了登録")
     }
 
     if (Number(read_excel_value(userName+"_課題表", "h"+i.toString())) > sort_num){
-      console.log("break")
       break;
     }
   }
+  console.log(userName, "処理完了")
 }
 

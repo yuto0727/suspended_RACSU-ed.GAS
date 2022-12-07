@@ -36,17 +36,26 @@ function doPost(e) {
 
     // 追加直後の場合 → ユーザーネーム設定
     if (userName == ""){
+      if (userName == "ユーザー設定" || userName == "課題一覧を送信" || userName == "今すぐ課題取得" || userName == "タスクを追加"){
+        sendMessage([_text("あなたの名前を送信してください。")], replyToken, method="reply")
+        return;
+      }
       var userName = message;
       sendMessage([_text(userName+"さん、ユーザーを登録しました。"), _text("続いて、ACSUとの連携設定を行ってください。\n所要時間は5分程度です。"), _flex_taskAutoGet(1)], replyToken, method="reply");
-
-      // ユーザー名記録
-      var rawNum = read_excel_value_all_rownum("ID", 1).flat().indexOf(userID)+1;
-      write_excel_value("ID", "b"+rawNum.toString(), message);
-      write_excel_value("ID", "i"+rawNum.toString(), "8-00");
-
+      
       // 個人シート作成
+      const hyper_link_A = `https://docs.google.com/spreadsheets/d/${sheet_id}/edit#gid=688801315`;
       make_sheet(userName+"_課題表");
-      write_excel_value_append(userName+"_課題表", ["ID-A",	"ID-B",	"講義名",	"課題名",	"提出月",	"提出日",	"提出時",	"ソート値",	"完了報告"]);
+      write_excel_value_append(userName+"_課題表", [`=HYPERLINK("${hyper_link_A}","ID-A")`,	"ID-B",	"講義名",	"課題名",	"提出月",	"提出日",	"提出時",	"ソート値",	"完了報告"]);
+
+      // ユーザー名記録・ハイパーリンク設定
+      const id = get_excel_sheetid(userName+"_課題表");
+      const hyper_link_B = `https://docs.google.com/spreadsheets/d/${sheet_id}/edit#gid=${id}`;
+      
+      // すでにIDは記録済みなので、その行に追記
+      const rawNum = read_excel_value_all_rownum("ID", 1).flat().indexOf(userID)+1;
+      write_excel_value("ID", "b"+rawNum.toString(), `=HYPERLINK("${hyper_link_B}","${userName}")`);
+      write_excel_value("ID", "i"+rawNum.toString(), "8-00");
 
     // --------------------------------------------------------------------------------------------
     //                                   メッセージ処理部
@@ -149,11 +158,10 @@ function doPost(e) {
     }else if(message == "ステップ4へ"){
       sendMessage([_flex_taskAutoGet(4)], replyToken, method="reply");
     }else if(message.indexOf(`https://lms.ealps.shinshu-u.ac.jp/${this_year().toString()}`) !== -1){
-      // 共通教育URLが送信されたとき
+      // URLが送信されたとき
       var userName = getuserName(userID);
-      var userNo = getuserNumber(userID);
-      userNo += 1;
-      message = message.replace(`https://lms.ealps.shinshu-u.ac.jp/${this_year().toString()}`, "").replace("calendar/export_execute.php?", "").replace("&preset_what=all&preset_time=recentupcoming", "");
+      var userNo = getuserNumber(userID)+1;
+      message = message.replace(`https://lms.ealps.shinshu-u.ac.jp/${this_year().toString()}`, "").replace("calendar/export_execute.php?", "").split("&preset_what")[0];
       var category = message.split("/userid=")[0].replace("/", "");
       var userid = message.split("userid=")[1].split("&authtoken=")[0];
       var authtoken = message.split("&authtoken=")[1];
@@ -191,12 +199,21 @@ function doPost(e) {
       var taskId_a = Number(message.split("「")[1].split("」")[0])
       var userName = getuserName(userID);
       if (message.indexOf("確認済み") !== -1){
+        // 完了を登録
         var text = makeFinishFlag(userName, taskId_a);
         sendMessage([_text(text)], replyToken, method="reply");
-      }else if(getClassName_fromDB(userName, taskId_a) !== "指定の課題が存在しません。"){
-        sendMessage([_confirm(`「${getClassName_fromDB(userName, taskId_a)}」`, `登録ID「${taskId_a}」の課題完了 - 確認済み`, "完了登録", "やめる", "やめる")], replyToken, method="reply");
+
+      }else if(getTaskData_fromDB(userName, taskId_a) !== "指定の課題が存在しません。"){
+        // 詳細と確認メッセージ送信
+
+        var task_data = getTaskData_fromDB(userName, taskId_a);
+
+        sendMessage([_task_detail(task_data[2], task_data[3]), _confirm("上記課題を完了登録しますか？", `登録ID「${taskId_a}」の課題完了 - 確認済み`, "完了登録", "やめる", "やめる")], replyToken, method="reply");
+
       }else{
+        // 指定課題がないとき
         sendMessage([_text("指定の課題が存在しません。")], replyToken, method="reply");
+
       };
 
 

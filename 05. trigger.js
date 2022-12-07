@@ -61,6 +61,7 @@ function runTimer(){
 
     if (set_time_all[i] !== "通知しない" && Number(set_time_all[i].split("-")[0]) == this_hour){
       for (var j = 2; j <= 5; j += 3) {
+        // 課題取得
         if (read_excel_value("ID", alphabet[j]+(i+1).toString()) !== ""){
           var category = read_excel_value("ID", alphabet[j]+(i+1).toString());
           var userid = read_excel_value("ID", alphabet[j+1]+(i+1).toString());
@@ -72,8 +73,29 @@ function runTimer(){
         };
       };
 
-      sendMessage([_tasklist(userName_all[i]), _text("【定期連絡】\n現在登録済みの課題一覧です。"+message_added)], [userId_all[i]]);
-      console.log(userName_all[i], "に送信しました。")
+
+      // 完了フラグ取得
+      var flag_finish = read_excel_value_all_rownum(userName_all[i]+"_課題表", 9);
+
+      // 未完了課題格納リスト
+      var task_unfinished = [];
+
+      for(var k = 1, len = flag_finish.length; k < len; ++k){
+        if (flag_finish[k] == ""){
+          // 完了報告がされていない課題に適用
+          task_unfinished.push(read_excel_value_all_linenum(userName_all[i]+"_課題表", i+1));
+        };
+      };
+
+      // インデックス番号の最大値
+      var list_index_max = task_unfinished.length;
+
+      console.log("未完了数：", list_index_max)
+      
+      if (list_index_max !== 0){
+        sendMessage([_tasklist(userName_all[i]), _text("【定期連絡】\n現在登録済みの課題一覧です。"+message_added)], [userId_all[i]]);
+        console.log(userName_all[i], "に送信しました。")
+      };
     };
   };
 }

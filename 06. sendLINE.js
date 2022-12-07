@@ -6,59 +6,160 @@ function _text(text){
   return data;
 }
 
+function _task_detail(class_name, task_name) {
+  var code = getClassCode(class_name)
+
+  var contents = {
+    "type": "bubble",
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "box",
+          "layout": "horizontal",
+          "contents": [
+            {
+              "type": "text",
+              "size": "md",
+              "text": "講義名：",
+              "wrap": true,
+              "flex": 0,
+              "gravity": "center",
+              "weight": "bold"
+            },
+            {
+              "type": "text",
+              "text": class_name,
+              "wrap": true
+            }
+          ],
+          "spacing": "sm"
+        },
+        {
+          "type": "separator",
+          "margin": "sm"
+        },
+        {
+          "type": "box",
+          "layout": "horizontal",
+          "contents": [
+            {
+              "type": "text",
+              "size": "md",
+              "text": "課題名：",
+              "wrap": true,
+              "flex": 0,
+              "gravity": "center",
+              "weight": "bold"
+            },
+            {
+              "type": "text",
+              "text": task_name,
+              "wrap": true
+            }
+          ],
+          "margin": "md",
+          "spacing": "sm"
+        },
+        {
+          "type": "separator",
+          "margin": "sm"
+        },
+        {
+          "type": "box",
+          "layout": "horizontal",
+          "contents": [
+            {
+              "type": "text",
+              "size": "lg",
+              "text": "eAlpsのリンクはこちら",
+              "wrap": true,
+              "gravity": "center",
+              "weight": "bold",
+              "action": {
+                "type": "uri",
+                "label": "action",
+                "uri": `https://lms.ealps.shinshu-u.ac.jp/${this_year()}/${getClassCode(class_name).slice(0, 1).toLowerCase()}/course/search.php?q=${encodeURI(class_name)}&areaids=core_course-course`
+              },
+              "decoration": "underline",
+              "align": "center",
+              "color": "#337ab7"
+            }
+          ],
+          "margin": "lg"
+        }
+      ],
+      "paddingStart": "lg",
+      "paddingEnd": "lg"
+    }
+  }
+
+  var data = {
+      "type": "flex",
+      "altText": "課題詳細",
+      "contents": contents,
+        "styles": {
+          "footer": {
+            "separator": true
+          }
+        }
+      }
+  
+  return data;
+}
+
 function _confirm(title, textA, labelA, textB, labelB) {
   var contents = {
-  "type": "bubble",
-  "body": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [
-      {
-        "type": "text",
-        "size": "lg",
-        "text": title,
-        "wrap": true
-      },
-      {
-        "type": "text",
-        "text": " の課題を完了登録しますか？ ",
-        "wrap": true,
-        "align": "start"
-      }
-    ]
-  },
-  "footer": {
-    "type": "box",
-    "layout": "horizontal",
-    "spacing": "sm",
-    "contents": [
-      {
-        "type": "button",
-        "action": {
-          "type": "message",
-          "label": labelA,
-          "text": textA
+    "type": "bubble",
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": title,
+          "wrap": true,
+          "align": "center",
+          "size": "lg",
+          "margin": "sm"
+        }
+      ],
+      "paddingAll": "lg",
+      "paddingBottom": "sm"
+    },
+    "footer": {
+      "type": "box",
+      "layout": "horizontal",
+      "spacing": "sm",
+      "contents": [
+        {
+          "type": "button",
+          "action": {
+            "type": "message",
+            "label": labelA,
+            "text": textA
+          },
+          "style": "secondary"
         },
-        "style": "secondary"
-      },
-      {
-        "type": "button",
-        "action": {
-          "type": "message",
-          "label": labelB,
-          "text": textB
-        },
-        "style": "secondary"
-      }
-    ],
-    "flex": 0
+        {
+          "type": "button",
+          "action": {
+            "type": "message",
+            "label": labelB,
+            "text": textB
+          },
+          "style": "secondary"
+        }
+      ],
+      "flex": 0
+    }
   }
-}
 
 
   var data = {
       "type": "flex",
-      "altText": "確認",
+      "altText": "完了登録確認",
       "contents": contents,
         "styles": {
           "footer": {
@@ -164,10 +265,12 @@ function _tasklist(username){
       if (task_unfinished[list_index][4] == tomorrow_month && task_unfinished[list_index][5] == tomorrow_day){
         // 提出日が翌日の場合に、提出時間を赤字に変更
         var text_color = "#fa8072"
-        tomorrow_task_num += 1;
       }else{
         var text_color = "#555555"
       }
+
+      // 翌日以降の課題数
+      tomorrow_task_num += 1;
 
       // 提出時間追加
       contents_oneTask.push(makeText(task_unfinished[list_index][6].replace("-", ":"), "md", "regular", text_color, 0, "md"));
@@ -224,7 +327,7 @@ function _tasklist(username){
   // 全体データ作成
   var data = {
       "type": "flex",
-      "altText": `${today_month}/${today_day} 本日提出：${todays_task_num}件 明日提出：${tomorrow_task_num}件`,
+      "altText": `${today_month}/${today_day} 本日提出：${todays_task_num}件 明日以降提出：${tomorrow_task_num}件`,
       "contents": {
         "type": "bubble",
         "body": {

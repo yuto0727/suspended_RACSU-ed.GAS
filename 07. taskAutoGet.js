@@ -10,7 +10,7 @@ function getTask(username, userid, authtoken, category){
 
   var ics_index_list = Parser.data(ics)
   .from('SUMMARY:')
-  .to("\r\n")
+  .to("DESCRIPTION:")
   .iterate();
 
   console.log("pars1 ok")
@@ -32,21 +32,30 @@ function getTask(username, userid, authtoken, category){
   var task_list = [];
 
   for(var i = 0, len = ics_index_list.length; i < len; ++i){
-    console.log(i, ics_index_list[i], ics_date_list[i], ics_code_list[i])
-    if (ics_index_list[i].indexOf("の提出期限が近づいています") !== -1 && fixTimeCode(ics_date_list[i]) !== null){
-      console.log("a")
-      var task_index = ics_index_list[i].slice(1, -14);
+    console.log(ics_index_list[i], ics_date_list[i], fixTimeCode(ics_date_list[i]))
+
+    if(fixTimeCode(ics_date_list[i]) == null){
+      console.log("提出期限外です。");
+      continue;
+    }
+
+    if (ics_index_list[i].indexOf("の提出期限が近づいています") !== -1){
+      var task_index = ics_index_list[i].split("」の提出期限が近づいています")[0].replace("「", "");
       task_list.push([getClassName(ics_code_list[i]), task_index, fixTimeCode(ics_date_list[i])]);
-    }else if (ics_index_list[i].indexOf("の受験可能期間の終了") !== -1 && fixTimeCode(ics_date_list[i]) !== null){
-      console.log("b")
+    }else if (ics_index_list[i].indexOf("の提出期限") !== -1){
+      var task_index = ics_index_list[i].split("」の提出期限")[0].replace("「", "");
+      task_list.push([getClassName(ics_code_list[i]), task_index, fixTimeCode(ics_date_list[i])]);
+    }else if (ics_index_list[i].indexOf("の受験可能期間の終了") !== -1){
       var task_index = ics_index_list[i].split(" の受験可能期間の終了")[0];
       task_list.push([getClassName(ics_code_list[i]), task_index, fixTimeCode(ics_date_list[i])]);
-    }else if (ics_index_list[i].indexOf("」終了") !== -1 && fixTimeCode(ics_date_list[i]) !== null){
-      console.log("c")
+    }else if (ics_index_list[i].indexOf("」終了") !== -1){
       var task_index = ics_index_list[i].split("」終了")[0].replace("「", "");
       task_list.push([getClassName(ics_code_list[i]), task_index, fixTimeCode(ics_date_list[i])]);
+    }else if (ics_index_list[i].indexOf(" 要完了") !== -1){
+      var task_index = ics_index_list[i].split(" 要完了")[0];
+      task_list.push([getClassName(ics_code_list[i]), task_index, fixTimeCode(ics_date_list[i])]);
     }else{
-      console.log("pass")
+      console.log("対象外のタスクです。");
     };
   };
 
@@ -76,8 +85,6 @@ function fetchSyllabus(code){
   .to('</td>')
   .iterate()[0];
 
-  console.log(classname_A, classname_B)
-
   if (classname_A == "<!" && classname_B == "<!"){
     sendMessage([_text(`該当講義がない授業コードが検出されました。\n\nコード：${code}`)], [userID_admin], method="multicast", account="admin");
     var classname = "該当授業なし";
@@ -97,19 +104,28 @@ function getClassName(code){
     dic.push(dic_raw[i][0]);
   }
 
-  console.log(dic);
-
   if (dic.indexOf(code) !== -1){
-    console.log("exist");
     var name = read_excel_value_all_rownum("class_table", 2)[dic.indexOf(code)][0];
   }else{
-    console.log("none");
     var name = fetchSyllabus(code);
     write_excel_value_append("class_table", [code, name]);
   }
 
-  console.log(name);
+  console.log("講義名：", name);
   return name;
+}
+
+function getClassCode(name){
+  dic = read_excel_value_all_rownum("class_table", 2).flat();
+
+  if (dic.indexOf(name) !== -1){
+    var code = read_excel_value_all_rownum("class_table", 1)[dic.indexOf(name)][0];
+  }else{
+    var code = "該当コードなし";
+  }
+
+  console.log("コード：", code);
+  return code;
 }
 
 function fixTimeCode(code){
@@ -122,8 +138,6 @@ function fixTimeCode(code){
     var limit_time_m = Number(code.slice(11,13));
 
     var limit = new Date(limit_year, limit_month-1, limit_day, limit_time_h, limit_time_m, 0);
-
-    console.log(today_data, limit, limit - today_data)
 
     if (limit - today_data >= 0){
       return [limit_month, limit_day, `${limit_time_h}-${(limit_time_m.toString()+"0").slice(0,2)}`];

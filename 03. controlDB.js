@@ -83,6 +83,14 @@ function get_excel_textRawNum(sheetName, raw, data){
   }
 }
 
+function get_excel_sheetid(sheetName){
+  var spreadsheet = SpreadsheetApp.openById(sheet_id);
+  var sheet = spreadsheet.getSheetByName(sheetName);
+  var id = sheet.getSheetId();
+
+  return id;
+}
+
 function sortSpreadsheet(sheetName){
   var spreadsheet = SpreadsheetApp.openById(sheet_id);
   var sheet = spreadsheet.getSheetByName(sheetName);
