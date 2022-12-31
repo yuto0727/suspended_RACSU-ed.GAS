@@ -198,7 +198,7 @@ const flex = {
             "contents": [
               {
                 "type": "text",
-                "text": "※学籍番号は、認証メール送信にのみ使用します。学籍番号の最初3文字（21T等）のみ、識別目的で使用されます。その他情報は破棄され、記録されません。",
+                "text": "※学籍番号は、サービス運用上のメール送信にのみ使用します。その他目的に使用することはありません。",
                 "margin": "lg",
                 "wrap": true,
                 "size": "sm"
@@ -212,179 +212,232 @@ const flex = {
     return content;
   },
   
-  user_policy:{
-    "type": "bubble",
-    "size": "giga",
-    "header": {
-      "type": "box",
-      "layout": "vertical",
-      "contents": [
-        {
-          "type": "text",
-          "text": "信州大学生専用",
-          "color": "#1b5aad",
-          "size": "sm",
-          "weight": "bold"
-        },
-        {
-          "type": "text",
-          "text": "課題一覧確認サービスRACSU",
-          "color": "#1b5aad",
-          "size": "md",
-          "weight": "bold"
-        }
-      ],
-      "paddingBottom": "none"
-    },
-    "body": {
-      "type": "box",
-      "layout": "vertical",
-      "contents": [
-        {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "text",
-              "text": "「課題自動取得」利用上の注意",
-              "size": "xl",
-              "align": "center",
-              "color": "#ff3d3d",
-              "weight": "bold"
-            },
-            {
-              "type": "text",
-              "text": "① このサービスで取得できない課題の種類がありますのでご注意ください。",
-              "wrap": true,
-              "margin": "md",
-              "weight": "bold"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "取得できない課題例：",
-                  "wrap": true,
-                  "margin": "sm",
-                  "size": "sm"
-                },
-                {
-                  "type": "text",
-                  "text": "・eAlps上で提出期限が設定されていないもの",
-                  "wrap": true,
-                  "margin": "sm",
-                  "size": "sm",
-                  "color": "#ff3d3d",
-                  "weight": "bold"
-                },
-                {
-                  "type": "text",
-                  "text": "・eAlps以外（Google Classroom, Google Form等）で提出するもの",
-                  "wrap": true,
-                  "margin": "sm",
-                  "size": "sm",
-                  "weight": "bold",
-                  "color": "#ff3d3d"
-                },
-                {
-                  "type": "text",
-                  "text": "・その他、独自の提出方法を採用しているもの",
-                  "wrap": true,
-                  "margin": "sm",
-                  "size": "sm"
-                }
-              ],
-              "borderWidth": "normal",
-              "borderColor": "#666666",
-              "cornerRadius": "md",
-              "paddingAll": "xs",
-              "paddingStart": "lg",
-              "margin": "sm"
-            },
-            {
-              "type": "text",
-              "text": "② このサービス上に、すべての課題が表示されていることは保証できません。",
-              "wrap": true,
-              "margin": "md",
-              "weight": "bold"
-            },
-            {
-              "type": "text",
-              "text": "必ずeAlpsを確認し、上記「取得できない課題例」に含まれる課題が出ていないか確認してください。",
-              "wrap": true,
-              "margin": "sm",
-              "size": "sm",
-              "align": "center"
-            },
-            {
-              "type": "text",
-              "text": "③ 本サービスは、課題提出の遅延・未提出などに対して、一切の責任を負いません。",
-              "wrap": true,
-              "margin": "md",
-              "weight": "bold"
-            },
-            {
-              "type": "text",
-              "text": "あくまで補助的なサービスとしてお使いください。",
-              "wrap": true,
-              "margin": "sm",
-              "size": "sm",
-              "align": "center"
-            }
-          ],
-          "paddingAll": "lg",
-          "borderColor": "#1b5aad",
-          "borderWidth": "medium",
-          "cornerRadius": "md"
-        }
-      ],
-      "paddingAll": "xl",
-      "paddingBottom": "none"
-    },
-    "footer": {
-      "type": "box",
-      "layout": "vertical",
-      "contents": [
-        {
-          "type": "text",
-          "text": "上記内容をよく読み、",
-          "wrap": true,
-          "size": "xs",
-          "align": "center",
-          "margin": "md"
-        },
-        {
-          "type": "text",
-          "text": "下のボタンから初期設定に進んでください。",
-          "wrap": true,
-          "size": "xs",
-          "align": "center"
-        },
-        {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "text",
-              "text": "①～③に同意し、初期設定を開始する",
-              "color": "#FFFFFF",
-              "align": "center"
-            }
-          ],
-          "backgroundColor": "#1b5aad",
-          "paddingAll": "xl",
-          "cornerRadius": "xs",
-          "action": {
-            "type": "message",
-            "text": "初期設定を開始する"
+  user_policy:function(token){
+    const content = {
+      "type": "bubble",
+      "size": "giga",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "信州大学生専用",
+            "color": "#1b5aad",
+            "size": "sm",
+            "weight": "bold"
           },
-          "margin": "sm"
-        }
-      ],
-      "paddingTop": "none"
-    }
+          {
+            "type": "text",
+            "text": "課題一覧確認サービスRACSU",
+            "color": "#1b5aad",
+            "size": "md",
+            "weight": "bold"
+          }
+        ],
+        "paddingBottom": "none"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "「課題自動取得」利用上の注意",
+                "size": "xl",
+                "align": "center",
+                "color": "#ff3d3d",
+                "weight": "bold"
+              },
+              {
+                "type": "text",
+                "text": "① このサービスで取得できない課題の種類がありますのでご注意ください。",
+                "wrap": true,
+                "margin": "md",
+                "weight": "bold"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "取得できない課題例：",
+                    "wrap": true,
+                    "margin": "sm",
+                    "size": "sm"
+                  },
+                  {
+                    "type": "text",
+                    "text": "・eAlps上で提出期限が設定されていないもの",
+                    "wrap": true,
+                    "margin": "sm",
+                    "size": "sm",
+                    "color": "#ff3d3d",
+                    "weight": "bold"
+                  },
+                  {
+                    "type": "text",
+                    "text": "・eAlps以外（Google Classroom, Google Form等）で提出するもの",
+                    "wrap": true,
+                    "margin": "sm",
+                    "size": "sm",
+                    "weight": "bold",
+                    "color": "#ff3d3d"
+                  },
+                  {
+                    "type": "text",
+                    "text": "・その他、独自の提出方法を採用しているもの",
+                    "wrap": true,
+                    "margin": "sm",
+                    "size": "sm"
+                  }
+                ],
+                "borderWidth": "normal",
+                "borderColor": "#666666",
+                "cornerRadius": "md",
+                "paddingAll": "xs",
+                "paddingStart": "lg",
+                "margin": "sm"
+              },
+              {
+                "type": "text",
+                "text": "② このサービス上に、すべての課題が表示されていることは保証できません。",
+                "wrap": true,
+                "margin": "md",
+                "weight": "bold"
+              },
+              {
+                "type": "text",
+                "text": "必ずeAlpsを確認し、上記「取得できない課題例」に含まれる課題が出ていないか確認してください。",
+                "wrap": true,
+                "margin": "sm",
+                "size": "sm",
+                "align": "center"
+              },
+              {
+                "type": "text",
+                "text": "③ 本サービスは、課題提出の遅延・未提出などに対して、一切の責任を負いません。",
+                "wrap": true,
+                "margin": "md",
+                "weight": "bold"
+              },
+              {
+                "type": "text",
+                "text": "あくまで補助的なサービスとしてお使いください。",
+                "wrap": true,
+                "margin": "sm",
+                "size": "sm",
+                "align": "center"
+              },
+              {
+                "type": "text",
+                "text": "④ 本サービスを利用する上で、以下の情報がサーバーに保存されます。",
+                "wrap": true,
+                "margin": "md",
+                "weight": "bold"
+              },
+              {
+                "type": "text",
+                "text": "これらの情報は、サービス運用の目的のみで使用し、他の目的では使用しません。",
+                "wrap": true,
+                "margin": "sm",
+                "size": "sm",
+                "weight": "bold",
+                "color": "#ff3d3d",
+                "offsetStart": "md"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "・取得可能な課題の詳細情報",
+                    "wrap": true,
+                    "margin": "sm",
+                    "size": "sm"
+                  },
+                  {
+                    "type": "text",
+                    "text": "・通知送信先のメールアドレス",
+                    "wrap": true,
+                    "margin": "sm",
+                    "size": "sm"
+                  },
+                  {
+                    "type": "text",
+                    "text": "・課題取得先のURL",
+                    "wrap": true,
+                    "margin": "sm",
+                    "size": "sm"
+                  }
+                ],
+                "borderWidth": "normal",
+                "borderColor": "#666666",
+                "cornerRadius": "md",
+                "paddingAll": "xs",
+                "paddingStart": "lg",
+                "margin": "sm"
+              }
+            ],
+            "paddingAll": "lg",
+            "borderColor": "#1b5aad",
+            "borderWidth": "medium",
+            "cornerRadius": "md"
+          }
+        ],
+        "paddingAll": "xl",
+        "paddingBottom": "none"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "上記内容をよく読み、",
+            "wrap": true,
+            "size": "xs",
+            "align": "center",
+            "margin": "md"
+          },
+          {
+            "type": "text",
+            "text": "下のボタンから初期設定に進んでください。",
+            "wrap": true,
+            "size": "xs",
+            "align": "center"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "①～③に同意し、初期設定を開始する",
+                "color": "#FFFFFF",
+                "align": "center"
+              }
+            ],
+            "backgroundColor": "#1b5aad",
+            "paddingAll": "xl",
+            "cornerRadius": "xs",
+            "action": {
+              "type": "message",
+              "text": `${token}@初期設定を開始する`
+            },
+            "margin": "sm"
+          }
+        ],
+        "paddingTop": "none"
+      }
+    };
+    return content;
   },
 
   link_guide:function(year, user_department){
@@ -458,7 +511,7 @@ const flex = {
                     "contents": [
                       {
                         "type": "image",
-                        "url": "https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/278353/5cbb1f9e-74c8-535f-604e-aac365419a8b.jpeg",
+                        "url": "https://photohito.com/imageaid/?url=https://photohito.k-img.com/uploads/photo164/user163690/9/8/984398ea20d5ed3884d78f612506ea11/984398ea20d5ed3884d78f612506ea11_l.jpg",
                         "size": "full"
                       }
                     ],
@@ -534,7 +587,7 @@ const flex = {
                     "contents": [
                       {
                         "type": "image",
-                        "url": "https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/278353/29daff10-9bea-0d49-712a-cea24dbd0f51.jpeg",
+                        "url": "https://photohito.com/imageaid/?url=https://photohito.k-img.com/uploads/photo164/user163690/a/a/aa190912c2ef37f9453e25d466e17deb/aa190912c2ef37f9453e25d466e17deb_l.jpg",
                         "size": "full"
                       }
                     ],

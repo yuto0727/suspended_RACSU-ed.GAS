@@ -2,74 +2,97 @@
 
 function doPost(e) {
   // --------------------------------------------------------------------------------------------
-  // メンテナンス時切り離し
-  // var Maintenance ＝true;に変更
-  // --------------------------------------------------------------------------------------------
-  const Maintenance = false;
-
-  // --------------------------------------------------------------------------------------------
-  // Webhookデータ処理
-  // --------------------------------------------------------------------------------------------
-  const webhookData = JSON.parse(e.postData.contents).events[0];
-  const type = webhookData.type;
-  const user_token = webhookData.replyToken;
-  const user_id = user_data(webhookData.source.userId);
-
-  // --------------------------------------------------------------------------------------------
   // インスタンス作成
   // --------------------------------------------------------------------------------------------
   const lc_main = new LineBotSDK.Client({channelAccessToken:acc_token.main});
   const lc_admin = new LineBotSDK.Client({channelAccessToken:acc_token.admin});
-  // const db_log = SSheetDB.open(db_id.log);
-  const db_user = SSheetDB.open(db_id.user);
+  const db_task = SSheetDB.open(db_id.task);
+  const db_ctrl = SSheetDB.open(db_id.ctrl);
 
-  // --------------------------------------------------------------------------------------------
-  // LINE応答処理
-  // --------------------------------------------------------------------------------------------
+
   try{
-    if (type == "follow"){
-      const is_exist = db_user.table("ユーザーデータ").updateCount({
-        "LINE ID" : ["==", user_id]
+    // --------------------------------------------------------------------------------------------
+    // Webhookデータ処理
+    // --------------------------------------------------------------------------------------------
+    const webhookData = JSON.parse(e.postData.contents).events[0];
+    const type = webhookData.type;
+    const user_reply_token = webhookData.replyToken;
+    const user_id = webhookData.source.userId;    
+
+    // --------------------------------------------------------------------------------------------
+    // メンテナンスチェック
+    // --------------------------------------------------------------------------------------------
+    if (is_maintenance(db_ctrl)){
+      add_ctrl_log(db_ctrl, `Webhook data received during maintenance from id:${user_id}`);
+      lc_main.replyMessage(user_reply_token, {
+        "type": "text",
+        "text": "現在メンテナンス中です。\n時間をおいてもう一度お試しください。"
       });
-      if (is_exist == []){
+      return;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // メイン処理
+    // --------------------------------------------------------------------------------------------
+    if (type == "follow"){
+      if (is_unregistered_user(db_ctrl, user_id)){
         // --------------------------------------------------------------------------------------------
         // 初回フォロー時処理
         // ・認証案内メッセージ送信
         // --------------------------------------------------------------------------------------------
-        process_follow(lc_main, db_user, user_id, user_token);
+        process_follow(lc_main, db_ctrl, user_id, user_reply_token);
+        add_ctrl_log(db_ctrl, `Follow process completed for id:${user_id}`);
 
-      } else if (is_exist !== []){
+      } else {
         // --------------------------------------------------------------------------------------------
         // ブロック解除時処理
-        // ・
+        // →未実装
         // --------------------------------------------------------------------------------------------
-        process_unblock(lc_main, db_user, user_id, user_token);
+        process_unblock(lc_main, db_ctrl, user_id, user_reply_token);
+        add_ctrl_log(db_ctrl, `Unblock process completed for id:${user_id}`);
 
-      } else {}
+      }
 
     } else if (type == "unfollow"){
       // --------------------------------------------------------------------------------------------
       // ブロック時処理
-      // ・
+      // →未実装
       // --------------------------------------------------------------------------------------------
+      process_block(db_ctrl, user_id);
+      add_ctrl_log(db_ctrl, `Block process completed for id:${user_id}`);
 
     } else if (type == "message"){
       // --------------------------------------------------------------------------------------------
       // メッセージ受信時処理
       // --------------------------------------------------------------------------------------------
       const user_message = webhookData.message.text;
-      const user_status = get_user_status(db_user, user_id);
+      const user_status = get_user_status(db_ctrl, user_id);
 
       if (user_status["認証ステータス"] == "認証済み"){
         // --------------------------------------------------------------------------------------------
         // 認証済みユーザー処理
         // --------------------------------------------------------------------------------------------
 
-        if (user_status["処理ステータス"] == "連携待ち"){
+        if (user_status["処理ステータス"] == "規約同意待ち"){
           // --------------------------------------------------------------------------------------------
-          // ACSU連携連携処理
+          // 利用規約同意処理
+          // ・同意メッセージチェック
+          // ↓同意
+          // ・処理ステータスを連携待ちに変更
+          // ・キャッシュデータ削除
           // ・連携手順メッセージ送信
           // --------------------------------------------------------------------------------------------
+          process_user_policy_agreement(lc_main, db_ctrl, user_id, user_reply_token, user_message);
+          add_ctrl_log(db_ctrl, `User policy agreement process completed for id:${user_id}`);
+          
+        } else if (user_status["処理ステータス"] == "連携待ち"){
+          // --------------------------------------------------------------------------------------------
+          // ACSU連携連携処理
+          //  
+          // --------------------------------------------------------------------------------------------
+          process_set_calendar_url(lc_main, db_ctrl, user_id, user_reply_token, user_message);
+          add_ctrl_log(db_ctrl, `Set calender url process completed for id:${user_id}`);
+
         } else if (user_status["処理ステータス"] == "連携済み"){
 
         } else {}
@@ -84,88 +107,37 @@ function doPost(e) {
           // --------------------------------------------------------------------------------------------
           // 学籍番号受信時処理
           // ・学籍番号の形式チェック
+          // ↓形式一致の場合
           // ・認証メールの送信
           // ・処理ステータスを認証待ちに変更
           // ・キャッシュデータに認証コードを記録
           // --------------------------------------------------------------------------------------------
-          process_accept_studentnumbre(lc_main, db_user, user_id, user_token, user_message);
+          process_accept_studentnumbre(lc_main, db_ctrl, user_id, user_reply_token, user_message);
+          add_ctrl_log(db_ctrl, `Accept studentnumbre process completed for id:${user_id}`);
 
         } else if (user_status["処理ステータス"] == "認証待ち"){
           // --------------------------------------------------------------------------------------------
           // 認証番号受信時処理
           // ・認証番号確認
-          // ・処理ステータスを連携待ちに変更
+          // ↓認証成功の場合
+          // ・処理ステータスを規約同意待ちに変更
           // ・認証ステータスを認証済みに変更
+          // ・利用規約の送信
           // --------------------------------------------------------------------------------------------
-          process_check_authnumber(lc_main, db_user, user_id, user_token, user_message);
+          process_check_authnumber(lc_main, db_ctrl, user_id, user_reply_token, user_message);
+          add_ctrl_log(db_ctrl, `Check authnumber completed for id:${user_id}`);
           
         } else {}
       } else {}
     } else {}
 
-  }catch(e){
+  }catch(error){
     // --------------------------------------------------------------------------------------------
     // 処理エラー時例外処理
     // ・該当ユーザーにエラーメッセージを送信
     // --------------------------------------------------------------------------------------------
-    lc_admin.pushMessage(user_id.admin, [{
-      "type":"text", 
-      "text":`処理エラーが発生しました。\n${String(e)}`
-    }])
+    process_error(lc_admin);
+    add_error_log(db_ctrl, error);
+    add_ctrl_log(db_ctrl, `Error exception happened`);
   }
-}
-
-
-
-
-
-
-function process_follow(lc_main, db_user, user_id, user_token){
-  const user_name = lc_main.getProfile(user_id).displayName;
-  lc_main.replyMessage(user_token, [{
-    "type": "flex", 
-    "altText": "友達登録ありがとうございます！",
-    "contents": flex.auth_guide
-  }]);
-  add_user(db_user, user_id, user_name);
-}
-
-function process_unblock(lc_main, db_user, user_id, user_token){
-
-}
-
-function process_accept_studentnumbre(lc_main, db_user, user_id, user_token, user_message){
-  const user_studentnumbre = user_message.match(/\d\d[LEJSMTAF]\d\d\d\d./i);
-  if (user_studentnumbre !== null){
-    // 学籍番号の形式一致 -> 認証メールを送信、処理ステータスを認証待ちに変更
-    const user_department = user_studentnumbre[0].match(/[LEJSMTAF]/i)[0].toLowerCase();
-    const user_year = user_studentnumbre[0].match(/\d\d/i)[0];
-    lc_main.replyMessage(user_token, [{
-      "type": "flex", 
-      "altText": "学生認証をお願いします。",
-      "contents": flex.auth_guide2("21t2168a")
-    }]);
-
-    db_user.table("ユーザーデータ")
-    .update({
-        "入学年度": user_year,
-        "学部": user_department,
-        "処理ステータス": "認証待ち"
-    },{
-      "LINE ID" : ["==", user_id]
-    });
-
-    // ここで認証メール送信
-
-  } else {
-    // 学籍番号が不正 -> エラーメッセージ送信
-    lc_main.replyMessage(user_token, {
-      "type": "text",
-      "text": "不正な形式の学籍番号です。正しい学籍番号を送信してください。"
-    });
-  }
-}
-
-function process_check_authnumber(lc_main, db_user, user_id, user_token, user_message){
-
 }
