@@ -133,6 +133,8 @@ function process_set_calendar_url(lc_main, db_ctrl, user_id, user_reply_token, u
         }
 
         if (is_ealps_id_all_registered(db_ctrl, user_id)){
+          // 2つとも正常追加できた場合
+          // 完了メッセージ送信
           lc_main.replyMessage(user_reply_token, {
             "type": "text",
             "text": "初期設定が完了しました。"
