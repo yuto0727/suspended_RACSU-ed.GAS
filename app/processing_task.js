@@ -1,4 +1,4 @@
-function get_task_data(lc_main, db_ctrl, user_id, user_department, user_eapls_userid, user_eapls_authtoken){
+function get_ealps_task_data(lc_main, db_ctrl, user_id, user_department, user_eapls_userid, user_eapls_authtoken){
   const ics = get_user_ics(user_department, user_eapls_userid, user_eapls_authtoken);
   const ics_index_list = Parser.data(ics).from('SUMMARY:').to("DESCRIPTION:").iterate();
   const ics_date_list = Parser.data(ics).from('DTEND:').to('\r\n').iterate();
@@ -6,7 +6,7 @@ function get_task_data(lc_main, db_ctrl, user_id, user_department, user_eapls_us
   let task_data = [];
 
   for(var i = 0, len = ics_index_list.length; i < len; ++i){
-    // console.log(ics_index_list[i], ics_date_list[i], fix_time_code(ics_date_list[i]))
+    // console.log(ics_index_list[i], ics_code_list[i], ics_date_list[i], fix_time_code(ics_date_list[i]))
 
     if(fix_time_code(ics_date_list[i]) == null){
       // console.log("提出期限外");
@@ -15,23 +15,23 @@ function get_task_data(lc_main, db_ctrl, user_id, user_department, user_eapls_us
 
     if (ics_index_list[i].indexOf("の提出期限が近づいています") !== -1){
       const task_name = ics_index_list[i].split("」の提出期限が近づいています")[0].replace("「", "");
-      task_data.push([get_class_name_data(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
+      task_data.push([get_class_name_data(db_ctrl, ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
 
     }else if (ics_index_list[i].indexOf("の提出期限") !== -1){
       const task_name = ics_index_list[i].split("」の提出期限")[0].replace("「", "");
-      task_data.push([get_class_name_data(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
+      task_data.push([get_class_name_data(db_ctrl, ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
 
     }else if (ics_index_list[i].indexOf("の受験可能期間の終了") !== -1){
       const task_name = ics_index_list[i].split(" の受験可能期間の終了")[0];
-      task_data.push([get_class_name_data(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
+      task_data.push([get_class_name_data(db_ctrl, ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
 
     }else if (ics_index_list[i].indexOf("」終了") !== -1){
       const task_name = ics_index_list[i].split("」終了")[0].replace("「", "");
-      task_data.push([get_class_name_data(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
+      task_data.push([get_class_name_data(db_ctrl, ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
 
     }else if (ics_index_list[i].indexOf(" 要完了") !== -1){
       const task_name = ics_index_list[i].split(" 要完了")[0];
-      task_data.push([get_class_name_data(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
+      task_data.push([get_class_name_data(db_ctrl, ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
 
     }else{
       // console.log("対象外");
