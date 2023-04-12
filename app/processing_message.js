@@ -46,6 +46,18 @@ function process_accept_studentnumbre(lc_main, db_ctrl, user_id, user_reply_toke
   }
 }
 
+function process_reset_studentnumbre(lc_main, db_ctrl, user_id, user_reply_token){
+  set_user_data(db_ctrl, user_id, "処理ステータス", "学籍番号送信待ち");
+  set_user_data(db_ctrl, user_id, "学籍番号", "N/A");
+  set_user_data(db_ctrl, user_id, "キャッシュデータ", "N/A");
+
+  lc_main.replyMessage(user_reply_token, [{
+    "type": "flex", 
+    "altText": "もう一度はじめからやり直してください。",
+    "contents": flex.auth_guide
+  }]);
+}
+
 function process_check_authnumber(lc_main, db_ctrl, user_id, user_reply_token, user_message){
   const user_auth_token = get_user_data(db_ctrl, user_id, "キャッシュデータ");
   if (user_auth_token == user_message){
@@ -100,7 +112,7 @@ function process_set_calendar_url(lc_main, db_ctrl, user_id, user_reply_token, u
     const url_param = user_message.split(/[/=&?]/);
     if (user_message.indexOf(env_data.domain) == -1 || url_param[6] !== "export_execute.php"){
       // URLエクスポート先のスクリプトが含まれるか
-      throw new Error("URLの形式が不正です。正しいURLを送信してください。");
+      throw new Error("URLの形式が不正です。正しいURLを送信してください。\n不明点はこちらまで：racsu.shinshu.univ@gmail.com");
     } else if (url_param.length !== 15){
       // URLパラメータ数が正規数含まれるか
       throw new Error("URLが最後までコピーされていない可能性があります。最後まですべてコピーして送信してください。");
@@ -132,20 +144,23 @@ function process_set_calendar_url(lc_main, db_ctrl, user_id, user_reply_token, u
           set_user_data(db_ctrl, user_id, "専門Token", url_param_authtoken);
         }
 
-        if (is_ealps_id_all_registered(db_ctrl, user_id)){
-          // 2つとも正常追加できた場合
-          // 完了メッセージ送信
-          lc_main.replyMessage(user_reply_token, {
-            "type": "text",
-            "text": "初期設定が完了しました。"
-          });
-          set_user_data(db_ctrl, user_id, "処理ステータス", "連携済み");
-          
-        } else {
+        if (!is_ealps_id_all_registered(db_ctrl, user_id)){
           lc_main.replyMessage(user_reply_token, {
             "type": "text",
             "text": "1つ目の登録が完了しました。続いてもう一つのURLも登録してください"
           });
+          
+        } else {
+          // 2つとも正常追加できた場合
+          // 完了メッセージ送信
+          lc_main.replyMessage(user_reply_token, [{
+            "type": "text",
+            "text": "初期設定が完了しました。"
+          },{
+            "type": "text",
+            "text": "課題の取得を開始しました。\nしばらくお待ち下さい。"
+          }]);
+          set_user_data(db_ctrl, user_id, "処理ステータス", "連携済み");
         }
       }
     }

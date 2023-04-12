@@ -166,7 +166,7 @@ const flex = {
                 "contents": [
                   {
                     "type": "text",
-                    "text": "メールが受け取れなかった方は",
+                    "text": "メール未受信・初めからやり直す場合は",
                     "size": "sm",
                     "flex": 0
                   },
@@ -511,7 +511,7 @@ const flex = {
                     "contents": [
                       {
                         "type": "image",
-                        "url": "https://photohito.com/imageaid/?url=https://photohito.k-img.com/uploads/photo164/user163690/9/8/984398ea20d5ed3884d78f612506ea11/984398ea20d5ed3884d78f612506ea11_l.jpg",
+                        "url": "https://user-images.githubusercontent.com/106244679/231330975-e1334e9b-4e7b-44ea-b0c0-7aa2ba3389a6.jpg",
                         "size": "full"
                       }
                     ],
@@ -587,7 +587,7 @@ const flex = {
                     "contents": [
                       {
                         "type": "image",
-                        "url": "https://photohito.com/imageaid/?url=https://photohito.k-img.com/uploads/photo164/user163690/a/a/aa190912c2ef37f9453e25d466e17deb/aa190912c2ef37f9453e25d466e17deb_l.jpg",
+                        "url": "https://user-images.githubusercontent.com/106244679/231331004-f448c4eb-2808-4307-a49e-6498aa095ba2.jpg",
                         "size": "full"
                       }
                     ],
