@@ -1,4 +1,4 @@
-function get_ealps_task_data(lc_main, db_ctrl, user_id, user_department, user_eapls_userid, user_eapls_authtoken){
+function get_ealps_task_data(db_ctrl, user_department, user_eapls_userid, user_eapls_authtoken){
   const ics = get_user_ics(user_department, user_eapls_userid, user_eapls_authtoken);
   const ics_index_list = Parser.data(ics).from('SUMMARY:').to("DESCRIPTION:").iterate();
   const ics_date_list = Parser.data(ics).from('DTEND:').to('\r\n').iterate();
@@ -32,15 +32,15 @@ function get_ealps_task_data(lc_main, db_ctrl, user_id, user_department, user_ea
     }else if (ics_index_list[i].indexOf(" 要完了") !== -1){
       const task_name = ics_index_list[i].split(" 要完了")[0];
       task_data.push([get_class_name_data(db_ctrl, ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
-
-    }else{
-      // console.log("対象外");
     }
   }
 
-  console.log(task_data);
+  // console.log(task_data);
+
   if (task_data.length !== 0){
-    // saveTask(username, task_data);
+    return task_data;
+  } else {
+    return null;
   }
 }
 
