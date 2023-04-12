@@ -15,28 +15,28 @@ function get_task_data(lc_main, db_ctrl, user_id, user_department, user_eapls_us
 
     if (ics_index_list[i].indexOf("の提出期限が近づいています") !== -1){
       const task_name = ics_index_list[i].split("」の提出期限が近づいています")[0].replace("「", "");
-      task_data.push([getClassName(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
+      task_data.push([get_class_name_data(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
 
     }else if (ics_index_list[i].indexOf("の提出期限") !== -1){
       const task_name = ics_index_list[i].split("」の提出期限")[0].replace("「", "");
-      task_data.push([getClassName(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
+      task_data.push([get_class_name_data(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
 
     }else if (ics_index_list[i].indexOf("の受験可能期間の終了") !== -1){
       const task_name = ics_index_list[i].split(" の受験可能期間の終了")[0];
-      task_data.push([getClassName(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
+      task_data.push([get_class_name_data(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
 
     }else if (ics_index_list[i].indexOf("」終了") !== -1){
       const task_name = ics_index_list[i].split("」終了")[0].replace("「", "");
-      task_data.push([getClassName(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
+      task_data.push([get_class_name_data(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
 
     }else if (ics_index_list[i].indexOf(" 要完了") !== -1){
       const task_name = ics_index_list[i].split(" 要完了")[0];
-      task_data.push([getClassName(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
+      task_data.push([get_class_name_data(ics_code_list[i]), task_name, fix_time_code(ics_date_list[i])]);
 
     }else{
-      console.log("対象外のタスクです。");
-    };
-  };
+      // console.log("対象外");
+    }
+  }
 
   console.log(task_data);
   if (task_data.length !== 0){
@@ -59,22 +59,3 @@ function fix_time_code(time_code){
     return null;
   }
 }
-
-function get(code){
-  dic_raw = read_excel_value_all_rownum("class_table", 1);
-  var dic = [];
-  for(var i = 0, len = dic_raw.length; i < len; ++i){
-    dic.push(dic_raw[i][0]);
-  }
-
-  if (dic.indexOf(code) !== -1){
-    var name = read_excel_value_all_rownum("class_table", 2)[dic.indexOf(code)][0];
-  }else{
-    var name = fetchSyllabus(code);
-    write_excel_value_append("class_table", [code, name]);
-  }
-
-  console.log("講義名：", name);
-  return name;
-}
-
