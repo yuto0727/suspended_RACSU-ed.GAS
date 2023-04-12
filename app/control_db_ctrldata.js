@@ -43,7 +43,7 @@ function get_class_name_data(db_ctrl, class_code){
     .result()[0]["授業名"];
   }catch{
     class_name = get_syllabus_class_name(class_code);
-    add_class_name_data(class_code, class_name);
+    add_class_name_data(db_ctrl, class_code, class_name);
   }
   return class_name;
 }
