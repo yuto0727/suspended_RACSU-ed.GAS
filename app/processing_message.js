@@ -1,7 +1,7 @@
 function process_follow(lc_main, db_ctrl, user_id, user_reply_token){
   const user_name = lc_main.getProfile(user_id).displayName;
   lc_main.replyMessage(user_reply_token, [{
-    "type": "flex", 
+    "type": "flex",
     "altText": "友達登録ありがとうございます！",
     "contents": flex.auth_guide
   }]);
@@ -28,7 +28,7 @@ function process_accept_studentnumbre(lc_main, db_ctrl, user_id, user_reply_toke
     const user_address = `${user_studentnumbre_lowercase}@shinshu-u.ac.jp`;
     const user_auth_token = make_token(6);
     lc_main.replyMessage(user_reply_token, [{
-      "type": "flex", 
+      "type": "flex",
       "altText": "学生認証をお願いします。",
       "contents": flex.auth_guide2(user_studentnumbre_lowercase)
     }]);
@@ -52,7 +52,7 @@ function process_reset_studentnumbre(lc_main, db_ctrl, user_id, user_reply_token
   set_user_data(db_ctrl, user_id, "キャッシュデータ", "N/A");
 
   lc_main.replyMessage(user_reply_token, [{
-    "type": "flex", 
+    "type": "flex",
     "altText": "もう一度はじめからやり直してください。",
     "contents": flex.auth_guide
   }]);
@@ -66,7 +66,7 @@ function process_check_authnumber(lc_main, db_ctrl, user_id, user_reply_token, u
       "type": "text",
       "text": "認証に成功しました。"
     },{
-      "type": "flex", 
+      "type": "flex",
       "altText": "利用規約",
       "contents": flex.user_policy(user_auth_token)
     }]);
@@ -89,7 +89,7 @@ function process_user_policy_agreement(lc_main, db_ctrl, user_id, user_reply_tok
   if (user_message == `${user_auth_token}@初期設定を開始する`){
     // 同意
     lc_main.replyMessage(user_reply_token, [{
-      "type": "flex", 
+      "type": "flex",
       "altText": "ACSU連携手順",
       "contents": flex.link_guide(env_data.fiscal_year().toString(), user_department)
     }]);
@@ -121,7 +121,7 @@ function process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply
       const url_param_department = url_param[url_param.indexOf(env_data.fiscal_year().toString())+1];
       const url_param_userid = url_param[url_param.indexOf("userid")+1];
       const url_param_authtoken = url_param[url_param.indexOf("authtoken")+1];
-      
+
       let url_param_department_for_check;
       if (url_param_department == "g"){
         url_param_department_for_check = "g";
@@ -149,7 +149,7 @@ function process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply
             "type": "text",
             "text": "1つ目の登録が完了しました。続いてもう一つのURLも登録してください"
           });
-          
+
         } else {
           // 2つとも正常追加できた場合
           // 完了メッセージ送信
@@ -165,7 +165,7 @@ function process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply
         }
       }
     }
-    
+
   } catch(error) {
     // 各エラーメッセージ送信
     const error_message = error.toString().split("Error: ")[1];
@@ -181,25 +181,27 @@ function process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id){
   const user_eapls_data = get_user_ealps_data(db_ctrl, user_id);
 
   // 共通教育
-  const user_task_data_A = get_ealps_task_data(db_ctrl, "g", user_eapls_data["共通ID"], user_eapls_data["共通Token"]);
+  const user_ics_A = get_user_ics("g", user_eapls_data["共通ID"], user_eapls_data["共通Token"]);
+  const user_task_data_A = fix_ics_task_data(db_ctrl, user_ics_A);
   save_task(db_task, user_id, user_task_data_A);
   // 専門教育
-  const user_task_data_B = get_ealps_task_data(db_ctrl, user_eapls_data["学籍番号"].slice(2,3), user_eapls_data["専門ID"], user_eapls_data["専門Token"])
+  const user_ics_B = get_user_ics(user_eapls_data["学籍番号"].slice(2,3), user_eapls_data["専門ID"], user_eapls_data["専門Token"]);
+  const user_task_data_B = fix_ics_task_data(db_ctrl, user_ics_B);
   save_task(db_task, user_id, user_task_data_B);
 
   lc_main.pushMessage(user_id, [{
-    "type":"text", 
+    "type":"text",
     "text":`課題の取得が完了しました。`
   }]);
 }
 
 function process_send_task_list(lc_main, db_ctrl, db_task, user_id, user_reply_token){
-  
+
 }
 
 function process_error(lc_admin){
   lc_admin.pushMessage(admin_id.admin, [{
-    "type":"text", 
+    "type":"text",
     "text":`処理エラーが発生しました。\n${String(error)}`
   }]);
 }

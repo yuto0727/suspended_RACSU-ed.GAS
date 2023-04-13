@@ -9,11 +9,22 @@ function make_task_sheet(db_task, user_id){
   });
 }
 
-function get_task_count(db_task, user_id){
+function get_all_task(db_task, user_id){
   const result = db_task.table(user_id)
   .select(["*"])
   .result();
-  return result.length;
+  return result
+}
+
+function get_all_task_unfinished(db_task, user_id, today){
+  const result = db_task.table(user_id)
+  .select(["*"])
+  .where({
+    "提出日": [">=", today],
+    "完了": ["==", "未"]
+  })
+  .result();
+  return result
 }
 
 function get_all_task_unique_id(db_task, user_id){
@@ -34,7 +45,7 @@ function save_task(db_task, user_id, task_data){
   for (let i=0; i<task_data.length; i++){
     const limit = Utilities.formatDate(task_data[i][2], 'Asia/Tokyo', 'yyyy/MM/dd H:mm:ss');
     const unique_id = task_data[i][0].slice(0,3) + task_data[i][1].slice(-10) + limit.replace(" ", "");
-    const serial_id = get_task_count(db_task, user_id) + 10001;
+    const serial_id = get_all_task(db_task, user_id).length + 10001;
 
     if (!unique_id_exist.includes(unique_id)){
       db_task.table(user_id).insert([{
@@ -42,7 +53,8 @@ function save_task(db_task, user_id, task_data){
         "UniqueID": unique_id,
         "講義名": task_data[i][0],
         "課題名": task_data[i][1],
-        "提出日": limit
+        "提出日": limit,
+        "完了": "未"
       }]);
       unique_id_exist.push(unique_id);
     }

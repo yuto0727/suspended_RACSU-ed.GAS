@@ -87,7 +87,7 @@ const flex = {
       "paddingAll": "xl"
     }
   },
-  
+
   auth_guide2:function(user_studentnumbre){
     const content = {
       "type": "bubble",
@@ -211,7 +211,7 @@ const flex = {
     }
     return content;
   },
-  
+
   user_policy:function(token){
     const content = {
       "type": "bubble",
@@ -775,7 +775,7 @@ const flex = {
     return content;
   },
 
-  content_separetor: function(margin){
+  content_separator: function(margin){
     var content = {
       "type": "separator",
       "margin": margin
