@@ -2,6 +2,7 @@ function make_task_sheet(db_task, user_id){
   db_task.createTable(user_id,{
     "SerialID": "@",
     "UniqueID": "@",
+    "SubmissionID": "@",
     "講義名": "@",
     "課題名": "@",
     "提出日": "yyyy/mm/dd H:mm:ss",
@@ -20,9 +21,12 @@ function get_all_task_unfinished(db_task, user_id, today){
   const result = db_task.table(user_id)
   .select(["*"])
   .where({
-    "提出日": [">=", today],
-    "完了": ["==", "未"]
+    "完了": ["==", "未"], 
+    "SubmissionID": [">=", Utilities.formatDate(today, 'Asia/Tokyo', 'yyyyMMddHHmmss')]
   })
+  .sort([{
+    "SubmissionID": true
+  }])
   .result();
   return result
 }
@@ -44,6 +48,7 @@ function save_task(db_task, user_id, task_data){
   let unique_id_exist = get_all_task_unique_id(db_task, user_id);
   for (let i=0; i<task_data.length; i++){
     const limit = Utilities.formatDate(task_data[i][2], 'Asia/Tokyo', 'yyyy/MM/dd H:mm:ss');
+    const limit_id = Utilities.formatDate(task_data[i][2], 'Asia/Tokyo', 'yyyyMMddHHmmss');
     const unique_id = task_data[i][0].slice(0,3) + task_data[i][1].slice(-10) + limit.replace(" ", "");
     const serial_id = get_all_task(db_task, user_id).length + 10001;
 
@@ -51,6 +56,7 @@ function save_task(db_task, user_id, task_data){
       db_task.table(user_id).insert([{
         "SerialID": serial_id,
         "UniqueID": unique_id,
+        "SubmissionID": limit_id,
         "講義名": task_data[i][0],
         "課題名": task_data[i][1],
         "提出日": limit,

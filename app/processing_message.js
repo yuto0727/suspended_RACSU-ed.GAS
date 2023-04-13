@@ -158,7 +158,7 @@ function process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply
             "text": "初期設定が完了しました。"
           },{
             "type": "text",
-            "text": "課題の取得を開始しました。"
+            "text": "eAlpsとの同期を開始しました。\nしばらくお待ち下さい。"
           }]);
           set_user_data(db_ctrl, user_id, "処理ステータス", "連携済み");
           process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id);
@@ -176,6 +176,15 @@ function process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply
   }
 }
 
+function gsge(){
+  const db_ctrl = SSheetDB.open(db_id.ctrl);
+  const db_task = SSheetDB.open(db_id.task);
+  const lc_main = new LineBotSDK.Client({channelAccessToken:acc_token.main});
+  const lc_admin = new LineBotSDK.Client({channelAccessToken:acc_token.admin});
+  const user_id = "U5a2991011c7a349ab5c5bebc4347cfb6";
+  process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id)
+}
+
 function process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id){
   make_task_sheet(db_task, user_id);
   const user_eapls_data = get_user_ealps_data(db_ctrl, user_id);
@@ -188,15 +197,36 @@ function process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id){
   const user_ics_B = get_user_ics(user_eapls_data["学籍番号"].slice(2,3), user_eapls_data["専門ID"], user_eapls_data["専門Token"]);
   const user_task_data_B = fix_ics_task_data(db_ctrl, user_ics_B);
   save_task(db_task, user_id, user_task_data_B);
+  // 更新
+  db_task.table(user_id).refresh();
+
+  const today = new Date();
+  const task_data = get_all_task_unfinished(db_task, user_id, today);
+  const task_data_fixed = make_flex_task_data(task_data);
 
   lc_main.pushMessage(user_id, [{
     "type":"text",
     "text":`課題の取得が完了しました。`
+  },{
+    "type": "flex",
+    "altText": `${Utilities.formatDate(today, 'Asia/Tokyo', 'MM/dd')} 本日提出：${task_data_fixed["todays_task_count"]}件 明日以降提出：${task_data_fixed["other_task_count"]}件`,
+    "contents": flex.task_list(task_data_fixed["contents"])
+  },{
+    "type":"text",
+    "text":`連携中は毎朝自動で更新されます。`
   }]);
 }
 
-function process_send_task_list(lc_main, db_ctrl, db_task, user_id, user_reply_token){
+function process_reply_task_list(lc_main, db_task, user_id, user_reply_token){
+  const today = new Date();
+  const task_data = get_all_task_unfinished(db_task, user_id, today);
+  const task_data_fixed = make_flex_task_data(task_data);
 
+  lc_main.replyMessage(user_reply_token, [{
+    "type": "flex",
+    "altText": `${Utilities.formatDate(today, 'Asia/Tokyo', 'MM/dd')} 本日提出：${task_data_fixed["todays_task_count"]}件 明日以降提出：${task_data_fixed["other_task_count"]}件`,
+    "contents": flex.task_list(task_data_fixed["contents"])
+  }]);
 }
 
 function process_error(lc_admin){

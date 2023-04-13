@@ -24,6 +24,6 @@ const env_data = {
       return this_year;
     }
   },
-  youbi: ["月", "火", "水", "木", "金"],
+  youbi: ["日", "月", "火", "水", "木", "金", "土"],
   domain: "https://lms.ealps.shinshu-u.ac.jp/"
 }

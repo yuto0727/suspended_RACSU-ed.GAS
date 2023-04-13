@@ -132,10 +132,14 @@ function doPost(e) {
           add_ctrl_log(db_ctrl, `Set calender url process completed for id:${user_id}`);
         
         } else if (user_status["処理ステータス"] == "連携済み"){
+          // --------------------------------------------------------------------------------------------
+          // ユーザーメッセージ処理
+          // --------------------------------------------------------------------------------------------
           if (user_message == "現在の課題を表示"){
-            process_send_task_list(lc_main, db_ctrl, db_task, user_id, user_reply_token);
+            process_reply_task_list(lc_main, db_task, user_id, user_reply_token);
             add_ctrl_log(db_ctrl, `Send task list process completed for id:${user_id}`);
           }
+
         }
       }
 

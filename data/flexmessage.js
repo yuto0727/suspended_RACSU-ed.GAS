@@ -736,6 +736,24 @@ const flex = {
     return content;
   },
 
+  task_list: function(task_data_json){
+    const content = {
+      "type": "bubble",
+      "size": "giga",
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": task_data_json
+      },
+      "styles": {
+        "footer": {
+          "separator": true
+        }
+      }
+    }
+    return content;
+  },
+
   content_box_noact: function(layout, margin, contents){
     const content = {
       "type": "box",
