@@ -135,9 +135,13 @@ function doPost(e) {
           // --------------------------------------------------------------------------------------------
           // ユーザーメッセージ処理
           // --------------------------------------------------------------------------------------------
-          if (user_message == "現在の課題を表示"){
+          if (user_message == "課題を表示"){
             process_reply_task_list(lc_main, db_task, user_id, user_reply_token);
             add_ctrl_log(db_ctrl, `Send task list process completed for id:${user_id}`);
+            
+          } else if (user_message == "最新の課題に更新"){
+            process_refresh_task(lc_main, db_ctrl, db_task, user_id, user_reply_token);
+            add_ctrl_log(db_ctrl, `Refresh task process completed for id:${user_id}`);
           }
 
         }
