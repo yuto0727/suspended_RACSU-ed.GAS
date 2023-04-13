@@ -6,10 +6,8 @@ function get_ealps_task_data(db_ctrl, user_department, user_eapls_userid, user_e
   let task_data = [];
 
   for(var i = 0, len = ics_index_list.length; i < len; ++i){
-    // console.log(ics_index_list[i], ics_code_list[i], ics_date_list[i], fix_time_code(ics_date_list[i]))
 
     if(fix_time_code(ics_date_list[i]) == null){
-      // console.log("提出期限外");
       continue;
     }
 
@@ -35,13 +33,7 @@ function get_ealps_task_data(db_ctrl, user_department, user_eapls_userid, user_e
     }
   }
 
-  // console.log(task_data);
-
-  if (task_data.length !== 0){
-    return task_data;
-  } else {
-    return null;
-  }
+  return task_data;
 }
 
 function fix_time_code(time_code){

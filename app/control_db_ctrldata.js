@@ -29,6 +29,23 @@ function get_user_data(db_ctrl, user_id, index){
   return data;
 }
 
+function get_user_ealps_data(db_ctrl, user_id){
+  const data = db_ctrl.table("ユーザーデータ")
+  .select([
+    "LINE ID",
+    "学籍番号",
+    "共通ID",
+    "共通Token",
+    "専門ID",
+    "専門Token"
+  ])
+  .where({
+    "LINE ID" : ["==", user_id]
+  })
+  .result()[0];
+  return data;
+}
+
 function get_class_name_data(db_ctrl, class_code){
   let class_name;
   try{
@@ -55,7 +72,8 @@ function get_class_name_data(db_ctrl, class_code){
 // データ追加
 // --------------------------------------------------------------------------------------------
 function add_class_name_data(db_ctrl, class_code, class_name){
-  db_ctrl.table("授業コード").insert([{
+  db_ctrl.table("授業コード")
+  .insert([{
     "授業コード": class_code,
     "授業名": class_name
   }]);
@@ -63,7 +81,8 @@ function add_class_name_data(db_ctrl, class_code, class_name){
 
 function add_user(db_ctrl, user_id, user_name){
   const time = Utilities.formatDate( new Date(), 'Asia/Tokyo', 'yyyy/MM/dd H:mm:ss');
-  db_ctrl.table("ユーザーデータ").insert([{
+  db_ctrl.table("ユーザーデータ")
+  .insert([{
     "LINE ID": user_id,
     "ユーザーネーム": user_name,
     "学籍番号": "N/A",
@@ -82,7 +101,8 @@ function add_user(db_ctrl, user_id, user_name){
 
 function add_ctrl_log(db_ctrl, ctrl){
   const time = Utilities.formatDate( new Date(), 'Asia/Tokyo', 'yyyy/MM/dd H:mm:ss');
-  db_ctrl.table("コントロールログ").insert([{
+  db_ctrl.table("コントロールログ")
+  .insert([{
     "タイムスタンプ": time,
     "メッセージ": ctrl
   }]);
@@ -90,7 +110,8 @@ function add_ctrl_log(db_ctrl, ctrl){
 
 function add_error_log(db_ctrl, error){
   const time = Utilities.formatDate( new Date(), 'Asia/Tokyo', 'yyyy/MM/dd H:mm:ss');
-  db_ctrl.table("エラーログ").insert([{
+  db_ctrl.table("エラーログ")
+  .insert([{
     "タイムスタンプ": time,
     "エラーメッセージ": error
   }]);
@@ -120,7 +141,8 @@ function set_user_data(db_ctrl, user_id, index, value){
 // データチェック
 // --------------------------------------------------------------------------------------------
 function is_unregistered_user(db_ctrl, user_id){
-  const is_exist = db_ctrl.table("ユーザーデータ").updateCount({
+  const is_exist = db_ctrl.table("ユーザーデータ")
+  .updateCount({
     "LINE ID" : ["==", user_id]
   });
   if (is_exist == []){
@@ -151,8 +173,6 @@ function is_maintenance(db_ctrl){
   })
   .result()[0]["値1"];
 
-  console.log(data)
-
   if (data == "true"){
     return true;
   }else{
@@ -170,5 +190,6 @@ function erasure_user(db_ctrl, user_id){
   db_ctrl.table("ユーザーデータ").deleteRow({
     "LINE ID" : ["==", user_id]
   });
+  delete_task_sheet(user_id);
 }
 // --------------------------------------------------------------------------------------------

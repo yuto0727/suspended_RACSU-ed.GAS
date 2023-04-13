@@ -128,12 +128,14 @@ function doPost(e) {
           // ・URLのパラメータ保存
           // ・課題保存用DB作成
           // --------------------------------------------------------------------------------------------
-          process_set_calendar_url(lc_main, db_ctrl, user_id, user_reply_token, user_message);
-          make_task_sheet(db_task, user_id);
+          process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply_token, user_message);
           add_ctrl_log(db_ctrl, `Set calender url process completed for id:${user_id}`);
-
+        
         } else if (user_status["処理ステータス"] == "連携済み"){
-
+          if (user_message == "現在の課題を表示"){
+            process_send_task_list(lc_main, db_ctrl, db_task, user_id, user_reply_token);
+            add_ctrl_log(db_ctrl, `Send task list process completed for id:${user_id}`);
+          }
         }
       }
 

@@ -76,7 +76,7 @@ const flex = {
           "contents": [
             {
               "type": "text",
-              "text": "※学籍番号は、認証メール送信にのみ使用します。学籍番号の最初3文字（21T等）のみ、識別目的で使用されます。その他情報は破棄され、記録されません。",
+              "text": "※学籍番号は、サービス運用上のメール送信にのみ使用します。その他目的に使用することはありません。",
               "margin": "lg",
               "wrap": true,
               "size": "sm"
@@ -732,8 +732,56 @@ const flex = {
           }
         }
       ]
-    }
+    };
+    return content;
+  },
+
+  content_box_noact: function(layout, margin, contents){
+    const content = {
+      "type": "box",
+      "layout": layout,
+      "margin": margin,
+      "contents": contents
+    };
+    return content;
+  },
+
+  content_box_doact: function(layout, margin, contents, action_text){
+    const content = {
+      "type": "box",
+      "layout": layout,
+      "margin": margin,
+      "contents": contents,
+      "action": {
+        "type": "message",
+        "label": "action",
+        "text": action_text
+        }
+    };
+    return content;
+  },
+
+  content_text: function(text, size, weight, color, flex, margin){
+    const content = {
+      "type": "text",
+      "text": text,
+      "weight": weight,
+      "size": size,
+      "color": color,
+      "flex": flex,
+      "gravity": "center",
+      "margin": margin
+    };
+    return content;
+  },
+
+  content_separetor: function(margin){
+    var content = {
+      "type": "separator",
+      "margin": margin
+    };
     return content;
   }
 
+  // 追加はこの階層に
 }

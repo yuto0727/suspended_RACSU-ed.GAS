@@ -107,7 +107,7 @@ function process_user_policy_agreement(lc_main, db_ctrl, user_id, user_reply_tok
 }
 
 
-function process_set_calendar_url(lc_main, db_ctrl, user_id, user_reply_token, user_message){
+function process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply_token, user_message){
   try{
     const url_param = user_message.split(/[/=&?]/);
     if (user_message.indexOf(env_data.domain) == -1 || url_param[6] !== "export_execute.php"){
@@ -158,9 +158,10 @@ function process_set_calendar_url(lc_main, db_ctrl, user_id, user_reply_token, u
             "text": "初期設定が完了しました。"
           },{
             "type": "text",
-            "text": "課題の取得を開始しました。\nしばらくお待ち下さい。"
+            "text": "課題の取得を開始しました。"
           }]);
           set_user_data(db_ctrl, user_id, "処理ステータス", "連携済み");
+          process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id);
         }
       }
     }
@@ -173,6 +174,27 @@ function process_set_calendar_url(lc_main, db_ctrl, user_id, user_reply_token, u
       "text": error_message
     });
   }
+}
+
+function process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id){
+  make_task_sheet(db_task, user_id);
+  const user_eapls_data = get_user_ealps_data(db_ctrl, user_id);
+
+  // 共通教育
+  const user_task_data_A = get_ealps_task_data(db_ctrl, "g", user_eapls_data["共通ID"], user_eapls_data["共通Token"]);
+  save_task(db_task, user_id, user_task_data_A);
+  // 専門教育
+  const user_task_data_B = get_ealps_task_data(db_ctrl, user_eapls_data["学籍番号"].slice(2,3), user_eapls_data["専門ID"], user_eapls_data["専門Token"])
+  save_task(db_task, user_id, user_task_data_B);
+
+  lc_main.pushMessage(user_id, [{
+    "type":"text", 
+    "text":`課題の取得が完了しました。`
+  }]);
+}
+
+function process_send_task_list(lc_main, db_ctrl, db_task, user_id, user_reply_token){
+  
 }
 
 function process_error(lc_admin){
