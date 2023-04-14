@@ -1,22 +1,10 @@
 function setTrigger(){
-  // ユーザーには8～21時orなしで設定してもらう
-  var set_time_all = read_excel_value_all_rownum("ID", 9).flat();
-  var userName_all = read_excel_value_all_rownum("ID", 2).flat();
-
   // 前日分のトリガー削除
   delTrigger()
 
-  // 期限切れの課題を削除
-  for (var i = 0, len = userName_all.length; i < len; i++){
-    makeFinishFlag_PastTask(userName_all[i])
-  }
-
-  // 重複を削除
-  var set_time_edited = Array.from(new Set(set_time_all))
-
   const time = new Date();
 
-  for (var i = 0, len = set_time_edited.length; i < len; ++i){
+  for (let i = 0, len = set_time_edited.length; i < len; ++i){
     if (set_time_edited[i] !== "通知しない"){
       time.setHours(Number(set_time_edited[i].split("-")[0]));
       time.setMinutes(00);
@@ -39,6 +27,11 @@ function setTrigger(){
     };
   };
 }
+
+
+
+
+
 
 function delTrigger() {
   const triggers = ScriptApp.getProjectTriggers();

@@ -1,0 +1,25 @@
+{
+  "timeZone": "Asia/Tokyo",
+  "dependencies": {
+    "libraries": [
+      {
+        "userSymbol": "LineBotSDK",
+        "version": "0",
+        "libraryId": "1_ZVltEUTNDC71VV8BKnTd51kji2_JjCtvY1TNjhzHsp1csNevrrNZ9g7",
+        "developmentMode": true
+      },
+      {
+        "userSymbol": "SSheetDB",
+        "version": "0",
+        "libraryId": "1uRTdf9QDVycbJts3DPPZ2hN3dQoCgNYRcWdSKdVF70KqtN511VFM7Wre",
+        "developmentMode": true
+      }
+    ]
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "webapp": {
+    "executeAs": "USER_DEPLOYING",
+    "access": "ANYONE_ANONYMOUS"
+  }
+}
