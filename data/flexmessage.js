@@ -45,12 +45,30 @@ const flex = {
           "layout": "vertical",
           "contents": [
             {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "このアカウントは非公式です。\n信州大学への問い合わせは\n絶対にしないでください。",
+                  "size": "lg",
+                  "align": "center",
+                  "color": "#ffd700",
+                  "weight": "bold",
+                  "wrap": true
+                }
+              ],
+              "backgroundColor": "#000000",
+              "paddingAll": "sm"
+            },
+            {
               "type": "text",
               "text": "はじめに、学生認証を行います",
               "size": "xl",
               "align": "center",
               "color": "#ff3d3d",
-              "weight": "bold"
+              "weight": "bold",
+              "margin": "md"
             },
             {
               "type": "text",
