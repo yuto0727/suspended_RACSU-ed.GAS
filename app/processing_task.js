@@ -55,7 +55,7 @@ function make_flex_task_data(task_data){
   const today = new Date();
   const tomorrow = new Date()
   tomorrow.setDate(today.getDate()+1);
-  let todays_task_count, text_color, task_data_json = [];
+  let data_index, todays_task_count=0, other_task_count=0, text_color, task_data_json = [];
 
   // 表題追加
   task_data_json.push(
@@ -79,15 +79,28 @@ function make_flex_task_data(task_data){
   // 当日提出の課題追加
   for (let i=0; ; i++){
     if (Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'yyyyMMdd') == Utilities.formatDate(today, 'Asia/Tokyo', 'yyyyMMdd')){
-      task_data_json.push(
-        flex.content_box_doact("horizontal", "md", [
-          flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH:mm'), "md", "regular", "#ff4500", 0, "none"),
-          flex.content_text(task_data[i]["講義名"].substr(0, 10), "lg", "regular", "#555555", 1, "md"),
-          flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#555555", 0, "none")
-        ], `登録ID「${task_data[i]["SerialID"]}」の課題完了`));
+      if (task_data[i]["完了"] == "未"){
+        task_data_json.push(
+          flex.content_box_doact("horizontal", "md", [
+            flex.content_text("☐", "md", "regular", "#555555", 0, "none"),
+            flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH:mm'), "md", "regular", "#ff4500", 0, "none"),
+            flex.content_text(task_data[i]["講義名"].substr(0, 10), "lg", "regular", "#555555", 1, "md"),
+            flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#555555", 0, "none")
+          ], `登録ID「${task_data[i]["SerialID"]}」の課題完了`));
+        todays_task_count++;
+
+      }else{
+        task_data_json.push(
+          flex.content_box_doact("horizontal", "md", [
+            flex.content_text("☑", "md", "regular", "#555555", 0, "none"),
+            flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH:mm'), "md", "regular", "#bbbbbb", 0, "none"),
+            flex.content_text(task_data[i]["講義名"].substr(0, 10), "lg", "regular", "#bbbbbb", 1, "md"),
+            flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#bbbbbb", 0, "none")
+          ], `登録ID「${task_data[i]["SerialID"]}」の課題完了`));
+      }
 
     }else{
-      todays_task_count = i;
+      data_index = i;
       break;
     };
   };
@@ -103,7 +116,7 @@ function make_flex_task_data(task_data){
   );
 
   // 今後提出の課題追加
-  for (let i=todays_task_count; ; i++){
+  for (let i=data_index; ; i++){
     const limit_day_add_this_loop = Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'MM/dd')
     let contents_temporary = [];
 
@@ -116,13 +129,27 @@ function make_flex_task_data(task_data){
         text_color = "#555555"
       }
 
-      contents_temporary.push(
-        flex.content_box_doact("horizontal", "none", [
-          flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH/mm'), "md", "regular", text_color, 0, "md"),
-          flex.content_text(task_data[i]["講義名"].substr(0, 10), "md", "regular", "#555555", 1, "md"),
-          flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#555555", 0, "none")
-        ], `登録ID「${task_data[i]["SerialID"]}」の課題完了`)
-      );
+      if (task_data[i]["完了"] == "未"){
+        contents_temporary.push(
+          flex.content_box_doact("horizontal", "none", [
+            flex.content_text("☐", "md", "regular", "#555555", 0, "md"),
+            flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH/mm'), "md", "regular", text_color, 0, "sm"),
+            flex.content_text(task_data[i]["講義名"].substr(0, 10), "md", "regular", "#555555", 1, "md"),
+            flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#555555", 0, "none")
+          ], `登録ID「${task_data[i]["SerialID"]}」の課題完了`)
+        );
+        other_task_count++;
+
+      }else{
+        contents_temporary.push(
+          flex.content_box_doact("horizontal", "none", [
+            flex.content_text("☑", "md", "regular", "#555555", 0, "md"),
+            flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH/mm'), "md", "regular", "#bbbbbb", 0, "sm"),
+            flex.content_text(task_data[i]["講義名"].substr(0, 10), "md", "regular", "#bbbbbb", 1, "md"),
+            flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#bbbbbb", 0, "none")
+          ], `登録ID「${task_data[i]["SerialID"]}」の課題完了`)
+        );
+      }
 
       // 最後まで読み込んだ場合break
       if (i+1 == task_data.length){
@@ -138,7 +165,7 @@ function make_flex_task_data(task_data){
     // 同日課題をまとめて追加
     task_data_json.push(
       flex.content_box_noact("horizontal", "md", [
-        flex.content_text(`${limit_day_add_this_loop}(${env_data.youbi[task_data[i]["提出日"].getDay()]})`, "sm", "regular", text_color, 0, "none"),
+        flex.content_text(`${limit_day_add_this_loop}(${env_data.youbi[task_data[i]["提出日"].getDay()]})`, "sm", "regular", text_color, 0, "sm"),
         flex.content_box_noact("vertical", "none", contents_temporary)
       ])
     );
@@ -162,7 +189,7 @@ function make_flex_task_data(task_data){
   const result = {
     "contents": task_data_json,
     "todays_task_count": todays_task_count,
-    "other_task_count": task_data.length-todays_task_count
+    "other_task_count": other_task_count
   }
   return result;
 }

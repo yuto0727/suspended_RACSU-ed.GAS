@@ -21,7 +21,6 @@ function get_all_task_unfinished(db_task, user_id, today){
   const result = db_task.table(user_id)
   .select(["*"])
   .where({
-    "完了": ["==", "未"], 
     "SubmissionID": [">=", Utilities.formatDate(today, 'Asia/Tokyo', 'yyyyMMddHHmmss')]
   })
   .sort([{
