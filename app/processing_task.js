@@ -81,22 +81,22 @@ function make_flex_task_data(task_data){
     if (Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'yyyyMMdd') == Utilities.formatDate(today, 'Asia/Tokyo', 'yyyyMMdd')){
       if (task_data[i]["完了"] == "未"){
         task_data_json.push(
-          flex.content_box_doact("horizontal", "md", [
+          flex.content_box_postback("horizontal", "md", [
             flex.content_text("☐", "md", "regular", "#555555", 0, "none"),
             flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH:mm'), "md", "regular", "#ff4500", 0, "none"),
             flex.content_text(task_data[i]["講義名"].substr(0, 10), "lg", "regular", "#555555", 1, "md"),
             flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#555555", 0, "none")
-          ], `登録ID「${task_data[i]["SerialID"]}」の課題完了`));
+          ], `finish@${task_data[i]["SerialID"]}`));
         todays_task_count++;
 
       }else{
         task_data_json.push(
-          flex.content_box_doact("horizontal", "md", [
+          flex.content_box_postback("horizontal", "md", [
             flex.content_text("☑", "md", "regular", "#555555", 0, "none"),
             flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH:mm'), "md", "regular", "#bbbbbb", 0, "none"),
             flex.content_text(task_data[i]["講義名"].substr(0, 10), "lg", "regular", "#bbbbbb", 1, "md"),
             flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#bbbbbb", 0, "none")
-          ], `登録ID「${task_data[i]["SerialID"]}」の課題完了`));
+          ], `redo@${task_data[i]["SerialID"]}`));
       }
 
     }else{
@@ -131,23 +131,23 @@ function make_flex_task_data(task_data){
 
       if (task_data[i]["完了"] == "未"){
         contents_temporary.push(
-          flex.content_box_doact("horizontal", "none", [
+          flex.content_box_postback("horizontal", "none", [
             flex.content_text("☐", "md", "regular", "#555555", 0, "md"),
             flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH/mm'), "md", "regular", text_color, 0, "sm"),
             flex.content_text(task_data[i]["講義名"].substr(0, 10), "md", "regular", "#555555", 1, "md"),
             flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#555555", 0, "none")
-          ], `登録ID「${task_data[i]["SerialID"]}」の課題完了`)
+          ], `finish@${task_data[i]["SerialID"]}`)
         );
         other_task_count++;
 
       }else{
         contents_temporary.push(
-          flex.content_box_doact("horizontal", "none", [
+          flex.content_box_postback("horizontal", "none", [
             flex.content_text("☑", "md", "regular", "#555555", 0, "md"),
             flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH/mm'), "md", "regular", "#bbbbbb", 0, "sm"),
             flex.content_text(task_data[i]["講義名"].substr(0, 10), "md", "regular", "#bbbbbb", 1, "md"),
             flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#bbbbbb", 0, "none")
-          ], `登録ID「${task_data[i]["SerialID"]}」の課題完了`)
+          ], `redo@${task_data[i]["SerialID"]}`)
         );
       }
 

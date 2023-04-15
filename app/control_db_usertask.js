@@ -43,6 +43,18 @@ function get_all_task_unique_id(db_task, user_id){
   return result
 }
 
+function set_task_status(db_task, user_id, task_id, task_status){
+  const data = {};
+  data["完了"] = task_status;
+  db_task.table(user_id)
+  .update(
+    data,
+  {
+    "SerialID" : ["==", task_id]
+  });
+  db_task.table(user_id).refresh();
+}
+
 function save_task(db_task, user_id, task_data){
   let unique_id_exist = get_all_task_unique_id(db_task, user_id);
   for (let i=0; i<task_data.length; i++){

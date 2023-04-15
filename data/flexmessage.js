@@ -797,6 +797,20 @@ const flex = {
     return content;
   },
 
+  content_box_postback: function(layout, margin, contents, post_data){
+    const content = {
+      "type": "box",
+      "layout": layout,
+      "margin": margin,
+      "contents": contents,
+      "action": {
+        "type": "postback",
+        "data": post_data
+      }
+    };
+    return content;
+  },
+
   content_text: function(text, size, weight, color, flex, margin){
     const content = {
       "type": "text",

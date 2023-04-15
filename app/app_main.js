@@ -146,6 +146,20 @@ function doPost(e) {
 
         }
       }
+    
+    } else if (type == "postback"){
+      const user_postback_data = webhookData.postback.data;
+      if (user_postback_data.includes("finish@")){
+        const task_id = user_postback_data.replace("finish@", "");
+        set_task_status(db_task, user_id, task_id, "済");
+
+      } else if (user_postback_data.includes("redo@")){
+        const task_id = user_postback_data.replace("redo@", "");
+        set_task_status(db_task, user_id, task_id, "未");
+
+      }
+      process_reply_task_list(lc_main, db_task, user_id, user_reply_token);
+
 
     } else if (type == "unfollow"){
       // --------------------------------------------------------------------------------------------
