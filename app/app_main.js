@@ -5,7 +5,7 @@ function doPost(e) {
   // インスタンス作成
   // --------------------------------------------------------------------------------------------
   const lc_main = new LineBotSDK.Client({channelAccessToken:acc_token.main});
-  const lc_admin = new LineBotSDK.Client({channelAccessToken:acc_token.admin});
+  const lc_contact = new LineBotSDK.Client({channelAccessToken:acc_token.contact});
   const db_task = SSheetDB.open(db_id.task);
   const db_ctrl = SSheetDB.open(db_id.ctrl);
 
@@ -142,23 +142,25 @@ function doPost(e) {
           } else if (user_message == "最新の課題に更新"){
             process_refresh_task(lc_main, db_ctrl, db_task, user_id, user_reply_token);
             add_ctrl_log(db_ctrl, `Refresh task process completed for id:${user_id}`);
+
+          } else if (user_message.includes("finish@")){
+            const task_id = user_message.replace("finish@", "");
+            set_task_status(db_task, user_id, task_id, "済");
+            process_reply_task_list(lc_main, db_task, user_id, user_reply_token);
+
+          } else if (user_message.includes("redo@")){
+            const task_id = user_message.replace("redo@", "");
+            set_task_status(db_task, user_id, task_id, "未");
+            process_reply_task_list(lc_main, db_task, user_id, user_reply_token);
+            
+          } else {
+            process_transmit_message(lc_contact, db_ctrl, user_id, user_message);
           }
-
         }
+
       }
-    
+
     } else if (type == "postback"){
-      const user_postback_data = webhookData.postback.data;
-      if (user_postback_data.includes("finish@")){
-        const task_id = user_postback_data.replace("finish@", "");
-        set_task_status(db_task, user_id, task_id, "済");
-
-      } else if (user_postback_data.includes("redo@")){
-        const task_id = user_postback_data.replace("redo@", "");
-        set_task_status(db_task, user_id, task_id, "未");
-
-      }
-      process_reply_task_list(lc_main, db_task, user_id, user_reply_token);
 
 
     } else if (type == "unfollow"){
@@ -176,7 +178,7 @@ function doPost(e) {
     // 処理エラー時例外処理
     // ・該当ユーザーにエラーメッセージを送信
     // --------------------------------------------------------------------------------------------
-    process_error(lc_admin);
+    process_error(lc_contact, error);
     add_error_log(db_ctrl, error);
     add_ctrl_log(db_ctrl, `Error exception happened`);
   }

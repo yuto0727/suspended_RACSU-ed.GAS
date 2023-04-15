@@ -4,12 +4,13 @@ const db_id = {
 }
 
 const admin_id = {
-  admin:"U5a2991011c7a349ab5c5bebc4347cfb6"
+  main:"U991c6ebc40028a4c00636723d2ed1f70",
+  contact: "U991c6ebc40028a4c00636723d2ed1f70"
 }
 
 const acc_token = {
-  main:'CmG1Ift30vaMzIDvpwtKDRVk11bs3r2FLRcGa9EDyZ0ytjQICShYpE+P14HuEOw+10gXMf/DGxkTbZaCwy5PdvaEd1PneOdVUtTcBx1jMOY6mbvD+BmXhIdcw5AkL7+fbEKE7vsIv1ecB1TyACL2QwdB04t89/1O/w1cDnyilFU=',
-  admin:'eRYKeSKd6A5T9pvXybJJeulaC7a7Z06X4IQ6xj2k/O3YNwhjrVw8tymNeUFnd9v0cG9Ho/0z/78LpUmcWvTIHI578NOCMZ25i/yIImduKPVgYHHqxASyH9F1iSzp21dXN4H633lgw5e/PoyWERyR0AdB04t89/1O/w1cDnyilFU='
+  main:'XvxePA0I10kkGP64M3A50vAE/R855UXINA7gYpXbVv02a07AV+61bReZnoRgTtSM0hL1AwL+uFo5kETdTsSKs1qNloF2wz3Guzc6Jf3cznsO3CoduXefrxx9RrxAHzUnla+mkyTmVRGebYebK+9coQdB04t89/1O/w1cDnyilFU=',
+  contact:'1MqtcfE6SEUpkz9Xg0FEZGHe/AlMMNwpAwua8LkomjTXZ4yrOzBG4Jf19QvsDawyq6EcXXD7kSqU0pPxiVPyxeBZWe/aoKrbOvKgOH+Y/uSmqJQLjBdekVVEla0O/6H4pkyBqZf6MA2dt8aSzrGXEQdB04t89/1O/w1cDnyilFU='
 }
 
 const env_data = {
