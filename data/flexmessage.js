@@ -529,7 +529,7 @@ const flex = {
                     "contents": [
                       {
                         "type": "image",
-                        "url": "https://user-images.githubusercontent.com/106244679/231330975-e1334e9b-4e7b-44ea-b0c0-7aa2ba3389a6.jpg",
+                        "url": "https://user-images.githubusercontent.com/106244679/231331004-f448c4eb-2808-4307-a49e-6498aa095ba2.jpg",
                         "size": "full"
                       }
                     ],
@@ -605,7 +605,7 @@ const flex = {
                     "contents": [
                       {
                         "type": "image",
-                        "url": "https://user-images.githubusercontent.com/106244679/231331004-f448c4eb-2808-4307-a49e-6498aa095ba2.jpg",
+                        "url": "https://user-images.githubusercontent.com/106244679/231330975-e1334e9b-4e7b-44ea-b0c0-7aa2ba3389a6.jpg",
                         "size": "full"
                       }
                     ],
