@@ -99,8 +99,15 @@ function make_flex_task_data(task_data){
           ], `redo@${task_data[i]["SerialID"]}`));
       }
 
+    // 提出日が当日以外の場合break
     }else{
       data_index = i;
+      break;
+    };
+
+    // 最後まで読み込んだ場合break
+    if (i+1 == task_data.length){
+      data_index = 9999999;
       break;
     };
   };
@@ -117,6 +124,11 @@ function make_flex_task_data(task_data){
 
   // 今後提出の課題追加
   for (let i=data_index; ; i++){
+    // 当日課題のみの場合break
+    if (i == 9999999){
+      break;
+    }
+
     const limit_day_add_this_loop = Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'MM/dd')
     let contents_temporary = [];
 

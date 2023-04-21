@@ -178,7 +178,7 @@ function doPost(e) {
     // 処理エラー時例外処理
     // ・該当ユーザーにエラーメッセージを送信
     // --------------------------------------------------------------------------------------------
-    process_error(lc_contact, error);
+    process_error(lc_contact, error, user_id);
     add_error_log(db_ctrl, error);
     add_ctrl_log(db_ctrl, `Error exception happened`);
   }

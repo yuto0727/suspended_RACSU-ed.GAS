@@ -284,9 +284,9 @@ function process_transmit_message(lc_contact, db_ctrl, user_id, message){
   }]);
 }
 
-function process_error(lc_contact, error){
+function process_error(lc_contact, error, user_id){
   lc_contact.pushMessage(admin_id.contact, [{
     "type":"text",
-    "text":`処理エラーが発生しました。\n${String(error)}`
+    "text":`処理エラーが発生しました。\nID:${user_id}\n${String(error)}`
   }]);
 }

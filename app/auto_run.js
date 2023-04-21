@@ -3,7 +3,7 @@ function set_trigger(){
   del_trigger()
 
   const time = new Date();
-  time.setHours(9);
+  time.setHours(8);
   time.setMinutes(00);
 
   ScriptApp.newTrigger("run_timer").timeBased().at(time).create();
@@ -47,8 +47,10 @@ function run_timer(){
         "text":`同期が完了しました。`
       },{
         "type":"text",
-        "text":`課題がeAlspに未登録です。\n登録され次第追加されます。`
+        "text":`未完了な課題がeAlspに未登録です。\n登録され次第追加されます。`
       }]);
+
+      console.log(`send to ${all_linked_user_id[i]["LINE ID"]}: no task`)
 
     } else {
       const task_data_fixed = make_flex_task_data(task_data);
@@ -60,18 +62,9 @@ function run_timer(){
         "altText": `${Utilities.formatDate(today, 'Asia/Tokyo', 'MM/dd')} 本日提出：${task_data_fixed["todays_task_count"]}件 明日以降提出：${task_data_fixed["other_task_count"]}件`,
         "contents": flex.task_list(task_data_fixed["contents"])
       }]);
+
+      console.log(`send to ${all_linked_user_id[i]["LINE ID"]}: ${task_data_fixed["todays_task_count"]+task_data_fixed["other_task_count"]} task`)
     }
   }
-
-
-
-
-
-
-
-
-
-
-
 }
 
