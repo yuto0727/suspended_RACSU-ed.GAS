@@ -1,16 +1,16 @@
 const db_id = {
-  ctrl:"18_GR4t0Yt4LpgmS1L5ah8LJyH3FVd9Bx4PmoSoQ4WNM",
-  task:"1RvkWQVK24eRs96lSYzn-6Iv4xOpD8pWreAssLh21RXQ"
+  ctrl: PropertiesService.getScriptProperties().getProperty("DATABASEID_CTRL"),
+  task: PropertiesService.getScriptProperties().getProperty("DATABASEID_TASK")
 }
 
 const admin_id = {
-  main:"U991c6ebc40028a4c00636723d2ed1f70",
-  contact: "U991c6ebc40028a4c00636723d2ed1f70"
+  main:PropertiesService.getScriptProperties().getProperty("LINEID_ADMIN"),
+  contact: PropertiesService.getScriptProperties().getProperty("LINEID_ADMIN")
 }
 
 const acc_token = {
-  main:'XvxePA0I10kkGP64M3A50vAE/R855UXINA7gYpXbVv02a07AV+61bReZnoRgTtSM0hL1AwL+uFo5kETdTsSKs1qNloF2wz3Guzc6Jf3cznsO3CoduXefrxx9RrxAHzUnla+mkyTmVRGebYebK+9coQdB04t89/1O/w1cDnyilFU=',
-  contact:'1MqtcfE6SEUpkz9Xg0FEZGHe/AlMMNwpAwua8LkomjTXZ4yrOzBG4Jf19QvsDawyq6EcXXD7kSqU0pPxiVPyxeBZWe/aoKrbOvKgOH+Y/uSmqJQLjBdekVVEla0O/6H4pkyBqZf6MA2dt8aSzrGXEQdB04t89/1O/w1cDnyilFU='
+  main: PropertiesService.getScriptProperties().getProperty("LINETOKEN_MAIN"),
+  contact: PropertiesService.getScriptProperties().getProperty("LINETOKEN_ADMIN")
 }
 
 const env_data = {
