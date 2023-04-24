@@ -276,16 +276,16 @@ function process_reply_task_list(lc_main, db_task, user_id, user_reply_token){
   }
 }
 
-function process_transmit_message(lc_contact, db_ctrl, user_id, message){
+function process_transmit_message(lc_status, db_ctrl, user_id, message){
   const user_name = get_user_data(db_ctrl, user_id, "ユーザーネーム")
-  lc_contact.pushMessage(admin_id.contact, [{
+  lc_status.pushMessage(admin_id.status, [{
     "type":"text",
     "text":`${user_name}:\n${message}`
   }]);
 }
 
-function process_error(lc_contact, error, user_id){
-  lc_contact.pushMessage(admin_id.contact, [{
+function process_error(lc_status, error, user_id){
+  lc_status.pushMessage(admin_id.status, [{
     "type":"text",
     "text":`処理エラーが発生しました。\nID:${user_id}\n${String(error)}`
   }]);

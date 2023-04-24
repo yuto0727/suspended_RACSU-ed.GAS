@@ -5,12 +5,12 @@ const db_id = {
 
 const admin_id = {
   main:PropertiesService.getScriptProperties().getProperty("LINEID_ADMIN"),
-  contact: PropertiesService.getScriptProperties().getProperty("LINEID_ADMIN")
+  status: PropertiesService.getScriptProperties().getProperty("LINEID_ADMIN")
 }
 
 const acc_token = {
   main: PropertiesService.getScriptProperties().getProperty("LINETOKEN_MAIN"),
-  contact: PropertiesService.getScriptProperties().getProperty("LINETOKEN_ADMIN")
+  status: PropertiesService.getScriptProperties().getProperty("LINETOKEN_ADMIN")
 }
 
 const env_data = {
