@@ -76,7 +76,7 @@ function make_flex_task_data(task_data){
 
   // 表題追加
   task_data_json.push(
-    flex.content_box_noact("horizontal", "none", [
+    flex.content_box_no_action("horizontal", "none", [
       flex.content_text(`${Utilities.formatDate(today, 'Asia/Tokyo', 'MM/dd')}現在 登録課題一覧`, "sm", "bold", "#1DB446", 0, "none")
     ])
   );
@@ -86,8 +86,8 @@ function make_flex_task_data(task_data){
 
   // 当日提出の表題追加
   task_data_json.push(
-    flex.content_box_noact("vertical", "md", [
-      flex.content_box_noact("horizontal", "none", [
+    flex.content_box_no_action("vertical", "md", [
+      flex.content_box_no_action("horizontal", "none", [
         flex.content_text("今日中に提出", "lg", "bold", "#ffa500", 0, "none")
       ])
     ])
@@ -98,7 +98,7 @@ function make_flex_task_data(task_data){
     if (Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'yyyyMMdd') == Utilities.formatDate(today, 'Asia/Tokyo', 'yyyyMMdd')){
       if (task_data[i]["完了"] == "未"){
         task_data_json.push(
-          flex.content_box_doact("horizontal", "md", [
+          flex.content_box_message("horizontal", "md", [
             flex.content_text("☐", "md", "regular", "#555555", 0, "none"),
             flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH:mm'), "md", "regular", "#ff4500", 0, "none"),
             flex.content_text(task_data[i]["講義名"].substr(0, 10), "lg", "regular", "#555555", 1, "md"),
@@ -108,7 +108,7 @@ function make_flex_task_data(task_data){
 
       }else{
         task_data_json.push(
-          flex.content_box_doact("horizontal", "md", [
+          flex.content_box_message("horizontal", "md", [
             flex.content_text("☑", "md", "regular", "#555555", 0, "none"),
             flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH:mm'), "md", "regular", "#bbbbbb", 0, "none"),
             flex.content_text(task_data[i]["講義名"].substr(0, 10), "lg", "regular", "#bbbbbb", 1, "md"),
@@ -134,7 +134,7 @@ function make_flex_task_data(task_data){
 
   // 今後提出の表題追加
   task_data_json.push(
-    flex.content_box_noact("horizontal", "xxl", [
+    flex.content_box_no_action("horizontal", "xxl", [
       flex.content_text("今後の提出予定", "lg", "bold", "#1e90ff", 0, "none")
     ])
   );
@@ -160,7 +160,7 @@ function make_flex_task_data(task_data){
 
       if (task_data[i]["完了"] == "未"){
         contents_temporary.push(
-          flex.content_box_doact("horizontal", "none", [
+          flex.content_box_message("horizontal", "none", [
             flex.content_text("☐", "md", "regular", "#555555", 0, "md"),
             flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH/mm'), "md", "regular", text_color, 0, "sm"),
             flex.content_text(task_data[i]["講義名"].substr(0, 10), "md", "regular", "#555555", 1, "md"),
@@ -171,7 +171,7 @@ function make_flex_task_data(task_data){
 
       }else{
         contents_temporary.push(
-          flex.content_box_doact("horizontal", "none", [
+          flex.content_box_message("horizontal", "none", [
             flex.content_text("☑", "md", "regular", "#555555", 0, "md"),
             flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH/mm'), "md", "regular", "#bbbbbb", 0, "sm"),
             flex.content_text(task_data[i]["講義名"].substr(0, 10), "md", "regular", "#bbbbbb", 1, "md"),
@@ -193,9 +193,9 @@ function make_flex_task_data(task_data){
 
     // 同日課題をまとめて追加
     task_data_json.push(
-      flex.content_box_noact("horizontal", "md", [
+      flex.content_box_no_action("horizontal", "md", [
         flex.content_text(`${limit_day_add_this_loop}(${env_data.youbi[task_data[i]["提出日"].getDay()]})`, "sm", "regular", text_color, 0, "sm"),
-        flex.content_box_noact("vertical", "none", contents_temporary)
+        flex.content_box_no_action("vertical", "none", contents_temporary)
       ])
     );
 
@@ -210,7 +210,7 @@ function make_flex_task_data(task_data){
 
   // フッター追加
   task_data_json.push(
-    flex.content_box_noact("horizontal", "md", [
+    flex.content_box_no_action("horizontal", "md", [
       flex.content_text("該当講義名をタップで完了登録ができます。", "xs", "regular", "#aaaaaa", 0, "none")
     ])
   );
@@ -225,5 +225,5 @@ function make_flex_task_data(task_data){
 
 function make_flex_task_input_form(){
   let task_data_json = [], contents_temporary = [];
-  
+
 }

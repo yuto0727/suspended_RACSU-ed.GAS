@@ -807,7 +807,7 @@ const flex = {
     return content;
   },
 
-  content_box_noact: function(layout, margin, contents){
+  content_box_no_action: function(layout, margin, contents){
     const content = {
       "type": "box",
       "layout": layout,
@@ -817,7 +817,7 @@ const flex = {
     return content;
   },
 
-  content_box_doact: function(layout, margin, contents, action_text){
+  content_box_message: function(layout, margin, contents, action_text){
     const content = {
       "type": "box",
       "layout": layout,
