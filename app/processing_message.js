@@ -94,7 +94,6 @@ function process_user_policy_agreement(lc_main, db_ctrl, user_id, user_reply_tok
       "contents": flex.link_guide(env_data.fiscal_year().toString(), user_department)
     }]);
     set_user_data(db_ctrl, user_id, "処理ステータス", "連携待ち");
-    set_user_data(db_ctrl, user_id, "認証ステータス", "認証済み");
     set_user_data(db_ctrl, user_id, "キャッシュデータ", "N/A");
 
   } else {
@@ -133,9 +132,9 @@ function process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply
         // 登録済みの学部コードを使って実際にFitchしてみて、正しいデータが取れるか
         // 登録済みの学部と違うURLが送られてきた場合にエラーを出すようにする
         throw new Error("URLの有効性を確認できませんでした。正しいURLを送信してください。");
+
       } else {
         // すべてのエラーチェック通過
-
         if (url_param_department == "g"){
           set_user_data(db_ctrl, user_id, "共通ID", url_param_userid);
           set_user_data(db_ctrl, user_id, "共通Token", url_param_authtoken);
@@ -160,7 +159,8 @@ function process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply
             "type": "text",
             "text": "eAlpsとの同期を開始しました。\nしばらくお待ち下さい。"
           }]);
-          set_user_data(db_ctrl, user_id, "処理ステータス", "連携済み");
+          set_user_data(db_ctrl, user_id, "連携ステータス", "連携済み");
+          set_user_data(db_ctrl, user_id, "処理ステータス", "N/A");
           process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id);
         }
       }
@@ -178,18 +178,7 @@ function process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply
 
 function process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id){
   make_task_sheet(db_task, user_id);
-  const user_eapls_data = get_user_ealps_data(db_ctrl, user_id);
-
-  // 共通教育
-  const user_ics_A = get_user_ics("g", user_eapls_data["共通ID"], user_eapls_data["共通Token"]);
-  const user_task_data_A = fix_ics_task_data(db_ctrl, user_ics_A);
-  save_task(db_task, user_id, user_task_data_A);
-  // 専門教育
-  const user_ics_B = get_user_ics(user_eapls_data["学籍番号"].slice(2,3), user_eapls_data["専門ID"], user_eapls_data["専門Token"]);
-  const user_task_data_B = fix_ics_task_data(db_ctrl, user_ics_B);
-  save_task(db_task, user_id, user_task_data_B);
-  // 更新
-  db_task.table(user_id).refresh();
+  update_task_data(db_ctrl, db_task, user_id);
 
   const today = new Date();
   const task_data = get_all_task_unfinished(db_task, user_id, today);
@@ -219,19 +208,7 @@ function process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id){
 }
 
 function process_refresh_task(lc_main, db_ctrl, db_task, user_id, user_reply_token){
-  const user_eapls_data = get_user_ealps_data(db_ctrl, user_id);
-
-  // 共通教育
-  const user_ics_A = get_user_ics("g", user_eapls_data["共通ID"], user_eapls_data["共通Token"]);
-  const user_task_data_A = fix_ics_task_data(db_ctrl, user_ics_A);
-  save_task(db_task, user_id, user_task_data_A);
-  // 専門教育
-  const user_ics_B = get_user_ics(user_eapls_data["学籍番号"].slice(2,3), user_eapls_data["専門ID"], user_eapls_data["専門Token"]);
-  const user_task_data_B = fix_ics_task_data(db_ctrl, user_ics_B);
-  save_task(db_task, user_id, user_task_data_B);
-  // 更新
-  db_task.table(user_id).refresh();
-
+  update_task_data(db_ctrl, db_task, user_id);
   const today = new Date();
   const task_data = get_all_task_unfinished(db_task, user_id, today);
   if (task_data.length == 0){

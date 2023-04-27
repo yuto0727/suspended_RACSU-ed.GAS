@@ -695,7 +695,7 @@ const flex = {
                     "contents": [
                       {
                         "type": "text",
-                        "text": "設定A",
+                        "text": "設定A（共通教育）",
                         "align": "center",
                         "color": "#FFFFFF",
                         "size": "lg"
@@ -716,7 +716,7 @@ const flex = {
                     "contents": [
                       {
                         "type": "text",
-                        "text": "設定B",
+                        "text": "設定B（専門教育）",
                         "align": "center",
                         "color": "#FFFFFF",
                         "size": "lg"
@@ -767,6 +767,41 @@ const flex = {
         "footer": {
           "separator": true
         }
+      }
+    }
+    return content;
+  },
+
+  task_input: function(form_data_json){
+    const content = {
+      "type": "bubble",
+      "size": "giga",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "信州大学生専用",
+            "color": "#1b5aad",
+            "size": "sm",
+            "weight": "bold"
+          },
+          {
+            "type": "text",
+            "text": "課題一覧確認サービスRACSU",
+            "color": "#1b5aad",
+            "size": "md",
+            "weight": "bold"
+          }
+        ],
+        "paddingBottom": "none"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": form_data_json,
+        "paddingAll": "xl"
       }
     }
     return content;

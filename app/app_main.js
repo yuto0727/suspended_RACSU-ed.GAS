@@ -131,28 +131,59 @@ function doPost(e) {
           process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply_token, user_message);
           add_ctrl_log(db_ctrl, `Set calender url process completed for id:${user_id}`);
 
-        } else if (user_status["処理ステータス"] == "連携済み"){
+        } else if (user_status["連携ステータス"] == "連携済み"){
           // --------------------------------------------------------------------------------------------
           // ユーザーメッセージ処理
           // --------------------------------------------------------------------------------------------
+          
+          // 課題送信処理
           if (user_message == "課題を表示"){
             process_reply_task_list(lc_main, db_task, user_id, user_reply_token);
             add_ctrl_log(db_ctrl, `Send task list process completed for id:${user_id}`);
 
+          // 課題更新処理
           } else if (user_message == "最新の課題に更新"){
             process_refresh_task(lc_main, db_ctrl, db_task, user_id, user_reply_token);
             add_ctrl_log(db_ctrl, `Refresh task process completed for id:${user_id}`);
 
+          // 課題終了処理
           } else if (user_message.includes("finish@")){
             const task_id = user_message.replace("finish@", "");
             set_task_status(db_task, user_id, task_id, "済");
             process_reply_task_list(lc_main, db_task, user_id, user_reply_token);
 
+          // 課題再表示処理
           } else if (user_message.includes("redo@")){
             const task_id = user_message.replace("redo@", "");
             set_task_status(db_task, user_id, task_id, "未");
             process_reply_task_list(lc_main, db_task, user_id, user_reply_token);
 
+          } else if (user_message == "課題を追加"){
+            lc_main.replyMessage(user_reply_token, {
+              "type": "text",
+              "text": "課題がある講義名を\n送信してください。\n「やめる」で取り消し"
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          // その他のメッセージ
+          // → 管理アカウントに転送
           } else {
             process_transmit_message(lc_status, db_ctrl, user_id, user_message);
           }

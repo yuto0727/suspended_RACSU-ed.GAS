@@ -1,3 +1,20 @@
+function update_task_data(db_ctrl, db_task, user_id){
+  const user_eapls_data = get_user_ealps_data(db_ctrl, user_id);
+
+  // 共通教育を更新
+  const user_ics_A = get_user_ics("g", user_eapls_data["共通ID"], user_eapls_data["共通Token"]);
+  const user_task_data_A = fix_ics_task_data(db_ctrl, user_ics_A);
+  save_task(db_task, user_id, user_task_data_A);
+
+  // 専門教育を更新
+  const user_ics_B = get_user_ics(user_eapls_data["学籍番号"].slice(2,3), user_eapls_data["専門ID"], user_eapls_data["専門Token"]);
+  const user_task_data_B = fix_ics_task_data(db_ctrl, user_ics_B);
+  save_task(db_task, user_id, user_task_data_B);
+
+  // データベース更新
+  db_task.table(user_id).refresh();
+}
+
 function fix_ics_task_data(db_ctrl, user_ics){
   const ics_index_list = Parser.data(user_ics).from('SUMMARY:').to("DESCRIPTION:").iterate();
   const ics_date_list = Parser.data(user_ics).from('DTEND:').to('\r\n').iterate();
@@ -204,4 +221,9 @@ function make_flex_task_data(task_data){
     "other_task_count": other_task_count
   }
   return result;
+}
+
+function make_flex_task_input_form(){
+  let task_data_json = [], contents_temporary = [];
+  
 }
