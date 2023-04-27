@@ -1,0 +1,202 @@
+[
+    {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "box",
+          "layout": "horizontal",
+          "contents": [
+            {
+              "type": "text",
+              "text": "講義名：",
+              "flex": 0,
+              "gravity": "center"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "入力中…",
+                  "color": "#aaaaaa"
+                }
+              ],
+              "borderColor": "#bbbbbb",
+              "borderWidth": "light",
+              "paddingAll": "md",
+              "action": {
+                "type": "message",
+                "text": "課題追加@講義名"
+              }
+            }
+          ]
+        },
+        {
+          "type": "box",
+          "layout": "horizontal",
+          "contents": [
+            {
+              "type": "text",
+              "text": "課題名：",
+              "flex": 0,
+              "gravity": "center"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "タップで入力",
+                  "color": "#aaaaaa"
+                }
+              ],
+              "borderColor": "#bbbbbb",
+              "borderWidth": "light",
+              "paddingAll": "md",
+              "action": {
+                "type": "message",
+                "text": "課題追加＠課題名"
+              }
+            }
+          ],
+          "margin": "md"
+        },
+        {
+          "type": "box",
+          "layout": "horizontal",
+          "contents": [
+            {
+              "type": "text",
+              "text": "提出日：",
+              "flex": 0,
+              "gravity": "center"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "タップで入力",
+                  "color": "#aaaaaa"
+                }
+              ],
+              "borderColor": "#bbbbbb",
+              "borderWidth": "light",
+              "paddingAll": "md",
+              "action": {
+                "type": "datetimepicker",
+                "mode": "datetime",
+                "data": "課題追加@limit"
+              }
+            }
+          ],
+          "margin": "md"
+        },
+        {
+          "type": "box",
+          "layout": "horizontal",
+          "contents": [
+            {
+              "type": "text",
+              "text": "繰り返し記録：",
+              "flex": 0,
+              "gravity": "center"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "☑ 一度のみ",
+                  "gravity": "center",
+                  "action": {
+                    "type": "message",
+                    "text": "課題追加@mode0"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "☐ 今期終了まで一週間おき",
+                  "gravity": "center",
+                  "margin": "sm",
+                  "action": {
+                    "type": "message",
+                    "text": "課題追加@mode1"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "☐ 今期終了まで二週間おき",
+                  "gravity": "center",
+                  "margin": "sm",
+                  "action": {
+                    "type": "message",
+                    "text": "課題追加@mode2"
+                  }
+                }
+              ],
+              "action": {
+                "type": "datetimepicker",
+                "mode": "datetime",
+                "data": "task_limit"
+              },
+              "margin": "md"
+            }
+          ],
+          "margin": "md"
+        }
+      ],
+      "paddingAll": "lg",
+      "borderColor": "#1b5aad",
+      "borderWidth": "medium",
+      "cornerRadius": "md"
+    },
+    
+    {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "追加する課題",
+          "align": "center",
+          "size": "lg",
+          "color": "#1DB446",
+          "weight": "bold"
+        },
+        {
+          "type": "text",
+          "text": "※ 課題詳細を入力してください",
+          "align": "center"
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "この内容で記録する",
+              "size": "lg",
+              "align": "center",
+              "gravity": "center",
+              "color": "#ffffff"
+            }
+          ],
+          "backgroundColor": "#bbbbbb",
+          "paddingAll": "lg",
+          "margin": "md",
+          "cornerRadius": "md"
+        }
+      ],
+      "borderColor": "#1b5aad",
+      "cornerRadius": "md",
+      "borderWidth": "medium",
+      "margin": "md",
+      "paddingAll": "md"
+    }
+  ]
