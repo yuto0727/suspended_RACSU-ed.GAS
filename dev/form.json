@@ -140,11 +140,6 @@
                   }
                 }
               ],
-              "action": {
-                "type": "datetimepicker",
-                "mode": "datetime",
-                "data": "task_limit"
-              },
               "margin": "md"
             }
           ],
@@ -156,7 +151,7 @@
       "borderWidth": "medium",
       "cornerRadius": "md"
     },
-    
+
     {
       "type": "box",
       "layout": "vertical",

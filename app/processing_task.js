@@ -225,5 +225,37 @@ function make_flex_task_data(task_data){
 
 function make_flex_task_input_form(){
   let task_data_json = [], contents_temporary = [];
+  task_data_json.push(
+    flex.content_box_no_action("vertical", "none", [
+      flex.content_box_no_action("horizontal", "none", [
+        flex.content_text("講義名：", "md", "regular", "#555555", "0", "none"),
+        flex.content_box_message_on_padding("vertical", "none", "md", "#bbbbbb", "light", "none", [
+          flex.content_text("入力中…", "md", "regular", "#aaaaaa", "0", "none")
+        ], "課題追加@講義名")
+      ]),
 
+      flex.content_box_no_action("horizontal", "md", [
+        flex.content_text("課題名：", "md", "regular", "#555555", "0", "none"),
+        flex.content_box_message_on_padding("vertical", "none", "md", "#bbbbbb", "light", "none", [
+          flex.content_text("タップで入力", "md", "regular", "#aaaaaa", "0", "none")
+        ], "課題追加@課題")
+      ]),
+
+      flex.content_box_no_action("horizontal", "md", [
+        flex.content_text("提出日：", "md", "regular", "#555555", "0", "none"),
+        flex.content_box_timepicker_on_padding("vertical", "none", "md", "#bbbbbb", "light", "none", [
+          flex.content_text("タップで入力", "md", "regular", "#aaaaaa", "0", "none")
+        ], "課題追加@limit")
+      ]),
+
+      flex.content_box_no_action("horizontal", "md", [
+        flex.content_text("繰り返し記録：", "md", "regular", "#555555", "0", "none"),
+        flex.content_box_no_action("vertical", "none", [
+          flex.content_text_message("☑ 一度のみ", "md", "regular", "#555555", "0", "none", "課題追加@mode0"),
+          flex.content_text_message("☐ 今期終了まで一週間おき", "md", "regular", "#555555", "0", "sm", "課題追加@mode1"),
+          flex.content_text_message("☐ 今期終了まで二週間おき", "md", "regular", "#555555", "0", "sm", "課題追加@mode2")
+        ])
+      ])
+    ])
+  )
 }
