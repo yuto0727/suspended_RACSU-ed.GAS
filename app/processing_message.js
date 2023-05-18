@@ -160,7 +160,8 @@ function process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply
             "type": "text",
             "text": "eAlpsとの同期を開始しました。\nしばらくお待ち下さい。"
           }]);
-          set_user_data(db_ctrl, user_id, "処理ステータス", "連携済み");
+          set_user_data(db_ctrl, user_id, "処理ステータス", "N/A");
+          set_user_data(db_ctrl, user_id, "連携ステータス", "連携済み");
           process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id);
         }
       }

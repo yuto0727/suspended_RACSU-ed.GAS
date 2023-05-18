@@ -1,5 +1,3 @@
-'use strict';
-
 function doPost(e) {
   // --------------------------------------------------------------------------------------------
   // インスタンス作成
@@ -131,11 +129,19 @@ function doPost(e) {
           process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply_token, user_message);
           add_ctrl_log(db_ctrl, `Set calender url process completed for id:${user_id}`);
         
-        } else if (user_status["処理ステータス"] == "連携済み"){
+        } else if (user_status["連携ステータス"] == "連携済み"){
           // --------------------------------------------------------------------------------------------
           // ユーザーメッセージ処理
           // --------------------------------------------------------------------------------------------
-          if (user_message == "課題を表示"){
+          if (user_message == "やめる"){
+            lc_main.replyMessage(user_reply_token, {
+              "type": "text",
+              "text": "現在実行中の処理を停止しました。"
+            });
+            set_user_data(db_ctrl, user_id, "処理ステータス", "N/A");
+            set_user_data(db_ctrl, user_id, "キャッシュデータ", "N/A");
+
+          }else if (user_message == "課題を表示"){
             process_reply_task_list(lc_main, db_task, user_id, user_reply_token);
             add_ctrl_log(db_ctrl, `Send task list process completed for id:${user_id}`);
             
@@ -152,8 +158,75 @@ function doPost(e) {
             const task_id = user_message.replace("redo@", "");
             set_task_status(db_task, user_id, task_id, "未");
             process_reply_task_list(lc_main, db_task, user_id, user_reply_token);
-            
-          } else {
+          
+          } else if (user_message == "課題追加@開始"){
+            set_user_data(db_ctrl, user_id, "処理ステータス", "課題追加中@講義名");
+            lc_main.replyMessage(user_reply_token, [{
+              "type": "flex",
+              "altText": "課題追加フォーム",
+              "contents": flex.task_input(
+                step=0,
+                class_name="入力中…"
+              )
+            }]);
+          
+          } else if (user_message.includes("課題追加@送信")){
+            set_user_data(db_ctrl, user_id, "処理ステータス", "N/A");
+            set_user_data(db_ctrl, user_id, "キャッシュデータ", "N/A");
+            const param = user_message.replace("課題追加@送信?", "");
+            const class_name = param.split("&")[0].replace("class=", "");
+            const task_name = param.split("&")[1].replace("task=", "");
+            const task_limit = new Date(param.split("&")[2].replace("limit=", ""));
+            const today = new Date();
+            save_task(db_task, user_id, [[class_name, task_name, task_limit]]);
+            db_task.table(user_id).refresh();
+
+            const task_data = get_all_task_unfinished(db_task, user_id, today);
+            if (task_data.length == 0){
+              lc_main.replyMessage(user_reply_token, [{
+                "type":"text",
+                "text":`課題がeAlspに未登録です。\n登録され次第追加されます。`
+              }]);
+
+            } else {
+              const task_data_fixed = make_flex_task_data(task_data);
+              lc_main.replyMessage(user_reply_token, [{
+                "type": "flex",
+                "altText": `${Utilities.formatDate(today, 'Asia/Tokyo', 'MM/dd')} 本日提出：${task_data_fixed["todays_task_count"]}件 明日以降提出：${task_data_fixed["other_task_count"]}件`,
+                "contents": flex.task_list(task_data_fixed["contents"])
+              },{
+                "type":"text",
+                "text":"指定の課題を追加しました。"
+              }]);
+            }
+
+          } else if (user_status["処理ステータス"] == "課題追加中@講義名"){
+            set_user_data(db_ctrl, user_id, "処理ステータス", "課題追加中@課題名");
+            set_user_data(db_ctrl, user_id, "キャッシュデータ", `${user_message}`);
+            lc_main.replyMessage(user_reply_token, [{
+              "type": "flex",
+              "altText": "課題追加フォーム",
+              "contents": flex.task_input(
+                step=1,
+                class_name=user_message,
+                task_name="入力中…"
+              )
+            }]);
+          
+          } else if (user_status["処理ステータス"] == "課題追加中@課題名"){
+            set_user_data(db_ctrl, user_id, "処理ステータス", "課題追加中@期限");
+            set_user_data(db_ctrl, user_id, "キャッシュデータ", `${user_status["キャッシュデータ"]},${user_message}`);
+            lc_main.replyMessage(user_reply_token, [{
+              "type": "flex",
+              "altText": "課題追加フォーム",
+              "contents": flex.task_input(
+                step=2,
+                class_name=user_status["キャッシュデータ"],
+                task_name=user_message
+              )
+            }]);
+
+          }else{
             process_transmit_message(lc_status, db_ctrl, user_id, user_message);
           }
         }
@@ -161,6 +234,22 @@ function doPost(e) {
       }
 
     } else if (type == "postback"){
+      const user_postback = webhookData.postback.data;
+      const user_data = webhookData.postback.params;
+      const user_status = get_user_status(db_ctrl, user_id);
+
+      if (user_postback == "課題追加@limit"){
+        lc_main.replyMessage(user_reply_token, [{
+          "type": "flex",
+          "altText": "課題追加フォーム",
+          "contents": flex.task_input(
+            step=3,
+            class_name=user_status["キャッシュデータ"].split(",")[0],
+            task_name=user_status["キャッシュデータ"].split(",")[1],
+            task_limit=new Date(user_data.datetime)
+          )
+        }]);
+      }
 
 
     } else if (type == "unfollow"){
