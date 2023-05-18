@@ -178,7 +178,18 @@ function process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply
 
 function process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id){
   make_task_sheet(db_task, user_id);
-  update_task_data(db_ctrl, db_task, user_id);
+  const user_eapls_data = get_user_ealps_data(db_ctrl, user_id);
+
+  // 共通教育
+  const user_ics_A = get_user_ics("g", user_eapls_data["共通ID"], user_eapls_data["共通Token"]);
+  const user_task_data_A = fix_ics_task_data(db_ctrl, user_ics_A);
+  save_task(db_task, user_id, user_task_data_A);
+  // 専門教育
+  const user_ics_B = get_user_ics(user_eapls_data["学籍番号"].slice(2,3), user_eapls_data["専門ID"], user_eapls_data["専門Token"]);
+  const user_task_data_B = fix_ics_task_data(db_ctrl, user_ics_B);
+  save_task(db_task, user_id, user_task_data_B);
+  // 更新
+  db_task.table(user_id).refresh();
 
   const today = new Date();
   const task_data = get_all_task_unfinished(db_task, user_id, today);
@@ -208,7 +219,19 @@ function process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id){
 }
 
 function process_refresh_task(lc_main, db_ctrl, db_task, user_id, user_reply_token){
-  update_task_data(db_ctrl, db_task, user_id);
+  const user_eapls_data = get_user_ealps_data(db_ctrl, user_id);
+
+  // 共通教育
+  const user_ics_A = get_user_ics("g", user_eapls_data["共通ID"], user_eapls_data["共通Token"]);
+  const user_task_data_A = fix_ics_task_data(db_ctrl, user_ics_A);
+  save_task(db_task, user_id, user_task_data_A);
+  // 専門教育
+  const user_ics_B = get_user_ics(user_eapls_data["学籍番号"].slice(2,3), user_eapls_data["専門ID"], user_eapls_data["専門Token"]);
+  const user_task_data_B = fix_ics_task_data(db_ctrl, user_ics_B);
+  save_task(db_task, user_id, user_task_data_B);
+  // 更新
+  db_task.table(user_id).refresh();
+
   const today = new Date();
   const task_data = get_all_task_unfinished(db_task, user_id, today);
   if (task_data.length == 0){
@@ -253,16 +276,16 @@ function process_reply_task_list(lc_main, db_task, user_id, user_reply_token){
   }
 }
 
-function process_transmit_message(lc_status, db_ctrl, user_id, message){
+function process_transmit_message(lc_contact, db_ctrl, user_id, message){
   const user_name = get_user_data(db_ctrl, user_id, "ユーザーネーム")
-  lc_status.pushMessage(admin_id.status, [{
+  lc_contact.pushMessage(admin_id.contact, [{
     "type":"text",
     "text":`${user_name}:\n${message}`
   }]);
 }
 
-function process_error(lc_status, error, user_id){
-  lc_status.pushMessage(admin_id.status, [{
+function process_error(lc_contact, error, user_id){
+  lc_contact.pushMessage(admin_id.contact, [{
     "type":"text",
     "text":`処理エラーが発生しました。\nID:${user_id}\n${String(error)}`
   }]);

@@ -5,6 +5,7 @@ function set_trigger(){
   const time = new Date();
   time.setHours(8);
   time.setMinutes(00);
+
   ScriptApp.newTrigger("run_timer").timeBased().at(time).create();
 }
 
@@ -28,7 +29,6 @@ function run_timer(){
   for (let i=0; i<all_linked_user_id.length; i++){
     try{
       update_task_data(db_ctrl, db_task, all_linked_user_id[i]["LINE ID"]);
-
       const task_data = get_all_task_unfinished(db_task, all_linked_user_id[i]["LINE ID"], today);
       if (task_data.length == 0){
         lc_main.pushMessage(all_linked_user_id[i]["LINE ID"], [{
