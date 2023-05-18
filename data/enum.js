@@ -10,7 +10,7 @@ const admin_id = {
 
 const acc_token = {
   main: PropertiesService.getScriptProperties().getProperty("LINETOKEN_MAIN"),
-  status: PropertiesService.getScriptProperties().getProperty("LINETOKEN_ADMIN")
+  status: PropertiesService.getScriptProperties().getProperty("LINETOKEN_STATUS")
 }
 
 const env_data = {
