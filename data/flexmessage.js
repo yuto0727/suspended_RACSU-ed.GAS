@@ -695,7 +695,7 @@ const flex = {
                     "contents": [
                       {
                         "type": "text",
-                        "text": "設定A（共通教育）",
+                        "text": "設定A",
                         "align": "center",
                         "color": "#FFFFFF",
                         "size": "lg"
@@ -716,7 +716,7 @@ const flex = {
                     "contents": [
                       {
                         "type": "text",
-                        "text": "設定B（専門教育）",
+                        "text": "設定B",
                         "align": "center",
                         "color": "#FFFFFF",
                         "size": "lg"
@@ -772,242 +772,7 @@ const flex = {
     return content;
   },
 
-  task_input: function(){
-    const content = {
-      "type": "bubble",
-      "size": "giga",
-      "header": {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [
-          {
-            "type": "text",
-            "text": "信州大学生専用",
-            "color": "#1b5aad",
-            "size": "sm",
-            "weight": "bold"
-          },
-          {
-            "type": "text",
-            "text": "課題一覧確認サービスRACSU",
-            "color": "#1b5aad",
-            "size": "md",
-            "weight": "bold"
-          }
-        ],
-        "paddingBottom": "none"
-      },
-      "body": {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [
-          {
-            "type": "box",
-            "layout": "vertical",
-            "contents": [
-              {
-                "type": "box",
-                "layout": "horizontal",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "講義名：",
-                    "flex": 0,
-                    "gravity": "center"
-                  },
-                  {
-                    "type": "box",
-                    "layout": "vertical",
-                    "contents": [
-                      {
-                        "type": "text",
-                        "text": "入力中…",
-                        "color": "#aaaaaa"
-                      }
-                    ],
-                    "borderColor": "#bbbbbb",
-                    "borderWidth": "light",
-                    "paddingAll": "md",
-                    "action": {
-                      "type": "message",
-                      "text": "課題追加@講義名"
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "box",
-                "layout": "horizontal",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "課題名：",
-                    "flex": 0,
-                    "gravity": "center"
-                  },
-                  {
-                    "type": "box",
-                    "layout": "vertical",
-                    "contents": [
-                      {
-                        "type": "text",
-                        "text": "タップで入力",
-                        "color": "#aaaaaa"
-                      }
-                    ],
-                    "borderColor": "#bbbbbb",
-                    "borderWidth": "light",
-                    "paddingAll": "md",
-                    "action": {
-                      "type": "message",
-                      "text": "課題追加＠課題名"
-                    }
-                  }
-                ],
-                "margin": "md"
-              },
-              {
-                "type": "box",
-                "layout": "horizontal",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "提出日：",
-                    "flex": 0,
-                    "gravity": "center"
-                  },
-                  {
-                    "type": "box",
-                    "layout": "vertical",
-                    "contents": [
-                      {
-                        "type": "text",
-                        "text": "タップで入力",
-                        "color": "#aaaaaa"
-                      }
-                    ],
-                    "borderColor": "#bbbbbb",
-                    "borderWidth": "light",
-                    "paddingAll": "md",
-                    "action": {
-                      "type": "datetimepicker",
-                      "mode": "datetime",
-                      "data": "課題追加@limit"
-                    }
-                  }
-                ],
-                "margin": "md"
-              },
-              {
-                "type": "box",
-                "layout": "horizontal",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "繰り返し記録：",
-                    "flex": 0,
-                    "gravity": "center"
-                  },
-                  {
-                    "type": "box",
-                    "layout": "vertical",
-                    "contents": [
-                      {
-                        "type": "text",
-                        "text": "☑ 一度のみ",
-                        "gravity": "center",
-                        "action": {
-                          "type": "message",
-                          "text": "課題追加@mode0"
-                        }
-                      },
-                      {
-                        "type": "text",
-                        "text": "☐ 今期終了まで一週間おき",
-                        "gravity": "center",
-                        "margin": "sm",
-                        "action": {
-                          "type": "message",
-                          "text": "課題追加@mode1"
-                        }
-                      },
-                      {
-                        "type": "text",
-                        "text": "☐ 今期終了まで二週間おき",
-                        "gravity": "center",
-                        "margin": "sm",
-                        "action": {
-                          "type": "message",
-                          "text": "課題追加@mode2"
-                        }
-                      }
-                    ],
-                    "margin": "md"
-                  }
-                ],
-                "margin": "md"
-              }
-            ],
-            "paddingAll": "lg",
-            "borderColor": "#1b5aad",
-            "borderWidth": "medium",
-            "cornerRadius": "md"
-          },
-
-          {
-            "type": "box",
-            "layout": "vertical",
-            "contents": [
-              {
-                "type": "text",
-                "text": "追加する課題",
-                "align": "center",
-                "size": "lg",
-                "color": "#1DB446",
-                "weight": "bold"
-              },
-              {
-                "type": "text",
-                "text": "※ 課題詳細を入力してください",
-                "align": "center"
-              },
-              {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "この内容で記録する",
-                    "size": "lg",
-                    "align": "center",
-                    "gravity": "center",
-                    "color": "#ffffff"
-                  }
-                ],
-                "backgroundColor": "#bbbbbb",
-                "paddingAll": "lg",
-                "margin": "md",
-                "cornerRadius": "md"
-              }
-            ],
-            "borderColor": "#1b5aad",
-            "cornerRadius": "md",
-            "borderWidth": "medium",
-            "margin": "md",
-            "paddingAll": "md"
-          }
-        ],
-        "paddingAll": "xl"
-      }
-    }
-    return content;
-  },
-
-
-
-
-  // 各要素の生成関数
-  content_box_no_action: function(layout, margin, contents){
+  content_box_noact: function(layout, margin, contents){
     const content = {
       "type": "box",
       "layout": layout,
@@ -1017,21 +782,7 @@ const flex = {
     return content;
   },
 
-  content_box_on_padding: function(layout, margin, paddingAll, borderColor, borderWidth, cornerRadius, contents){
-    const content = {
-      "type": "box",
-      "layout": layout,
-      "margin": margin,
-      "contents": contents,
-      "paddingAll": paddingAll,
-      "borderColor": borderColor,
-      "borderWidth": borderWidth,
-      "cornerRadius": cornerRadius
-    };
-    return content;
-  },
-
-  content_box_message: function(layout, margin, contents, action_text){
+  content_box_doact: function(layout, margin, contents, action_text){
     const content = {
       "type": "box",
       "layout": layout,
@@ -1041,44 +792,6 @@ const flex = {
         "type": "message",
         "label": "action",
         "text": action_text
-        }
-    };
-    return content;
-  },
-
-  content_box_message_on_padding: function(layout, margin, paddingAll, borderColor, borderWidth, cornerRadius,  contents, action_text){
-    const content = {
-      "type": "box",
-      "layout": layout,
-      "margin": margin,
-      "contents": contents,
-      "paddingAll": paddingAll,
-      "borderColor": borderColor,
-      "borderWidth": borderWidth,
-      "cornerRadius": cornerRadius,
-      "action": {
-        "type": "message",
-        "label": "action",
-        "text": action_text
-        }
-    };
-    return content;
-  },
-
-  content_box_timepicker_on_padding: function(layout, margin, paddingAll, borderColor, borderWidth, cornerRadius,  contents, action_data){
-    const content = {
-      "type": "box",
-      "layout": layout,
-      "margin": margin,
-      "contents": contents,
-      "paddingAll": paddingAll,
-      "borderColor": borderColor,
-      "borderWidth": borderWidth,
-      "cornerRadius": cornerRadius,
-      "action": {
-        "type": "datetimepicker",
-        "mode": "datetime",
-        "data": action_data
         }
     };
     return content;
@@ -1108,24 +821,6 @@ const flex = {
       "flex": flex,
       "gravity": "center",
       "margin": margin
-    };
-    return content;
-  },
-
-  content_text_message: function(text, size, weight, color, flex, margin, action_text){
-    const content = {
-      "type": "text",
-      "text": text,
-      "weight": weight,
-      "size": size,
-      "color": color,
-      "flex": flex,
-      "gravity": "center",
-      "margin": margin,
-      "action": {
-        "type": "message",
-        "text": action_text
-      }
     };
     return content;
   },

@@ -1,20 +1,3 @@
-function update_task_data(db_ctrl, db_task, user_id){
-  const user_eapls_data = get_user_ealps_data(db_ctrl, user_id);
-
-  // 共通教育を更新
-  const user_ics_A = get_user_ics("g", user_eapls_data["共通ID"], user_eapls_data["共通Token"]);
-  const user_task_data_A = fix_ics_task_data(db_ctrl, user_ics_A);
-  save_task(db_task, user_id, user_task_data_A);
-
-  // 専門教育を更新
-  const user_ics_B = get_user_ics(user_eapls_data["学籍番号"].slice(2,3), user_eapls_data["専門ID"], user_eapls_data["専門Token"]);
-  const user_task_data_B = fix_ics_task_data(db_ctrl, user_ics_B);
-  save_task(db_task, user_id, user_task_data_B);
-
-  // データベース更新
-  db_task.table(user_id).refresh();
-}
-
 function fix_ics_task_data(db_ctrl, user_ics){
   const ics_index_list = Parser.data(user_ics).from('SUMMARY:').to("DESCRIPTION:").iterate();
   const ics_date_list = Parser.data(user_ics).from('DTEND:').to('\r\n').iterate();
@@ -76,7 +59,7 @@ function make_flex_task_data(task_data){
 
   // 表題追加
   task_data_json.push(
-    flex.content_box_no_action("horizontal", "none", [
+    flex.content_box_noact("horizontal", "none", [
       flex.content_text(`${Utilities.formatDate(today, 'Asia/Tokyo', 'MM/dd')}現在 登録課題一覧`, "sm", "bold", "#1DB446", 0, "none")
     ])
   );
@@ -86,8 +69,8 @@ function make_flex_task_data(task_data){
 
   // 当日提出の表題追加
   task_data_json.push(
-    flex.content_box_no_action("vertical", "md", [
-      flex.content_box_no_action("horizontal", "none", [
+    flex.content_box_noact("vertical", "md", [
+      flex.content_box_noact("horizontal", "none", [
         flex.content_text("今日中に提出", "lg", "bold", "#ffa500", 0, "none")
       ])
     ])
@@ -98,7 +81,7 @@ function make_flex_task_data(task_data){
     if (Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'yyyyMMdd') == Utilities.formatDate(today, 'Asia/Tokyo', 'yyyyMMdd')){
       if (task_data[i]["完了"] == "未"){
         task_data_json.push(
-          flex.content_box_message("horizontal", "md", [
+          flex.content_box_doact("horizontal", "md", [
             flex.content_text("☐", "md", "regular", "#555555", 0, "none"),
             flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH:mm'), "md", "regular", "#ff4500", 0, "none"),
             flex.content_text(task_data[i]["講義名"].substr(0, 10), "lg", "regular", "#555555", 1, "md"),
@@ -108,7 +91,7 @@ function make_flex_task_data(task_data){
 
       }else{
         task_data_json.push(
-          flex.content_box_message("horizontal", "md", [
+          flex.content_box_doact("horizontal", "md", [
             flex.content_text("☑", "md", "regular", "#555555", 0, "none"),
             flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH:mm'), "md", "regular", "#bbbbbb", 0, "none"),
             flex.content_text(task_data[i]["講義名"].substr(0, 10), "lg", "regular", "#bbbbbb", 1, "md"),
@@ -134,7 +117,7 @@ function make_flex_task_data(task_data){
 
   // 今後提出の表題追加
   task_data_json.push(
-    flex.content_box_no_action("horizontal", "xxl", [
+    flex.content_box_noact("horizontal", "xxl", [
       flex.content_text("今後の提出予定", "lg", "bold", "#1e90ff", 0, "none")
     ])
   );
@@ -160,9 +143,9 @@ function make_flex_task_data(task_data){
 
       if (task_data[i]["完了"] == "未"){
         contents_temporary.push(
-          flex.content_box_message("horizontal", "none", [
+          flex.content_box_doact("horizontal", "none", [
             flex.content_text("☐", "md", "regular", "#555555", 0, "md"),
-            flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH/mm'), "md", "regular", text_color, 0, "sm"),
+            flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH:mm'), "md", "regular", text_color, 0, "sm"),
             flex.content_text(task_data[i]["講義名"].substr(0, 10), "md", "regular", "#555555", 1, "md"),
             flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#555555", 0, "none")
           ], `finish@${task_data[i]["SerialID"]}`)
@@ -171,9 +154,9 @@ function make_flex_task_data(task_data){
 
       }else{
         contents_temporary.push(
-          flex.content_box_message("horizontal", "none", [
+          flex.content_box_doact("horizontal", "none", [
             flex.content_text("☑", "md", "regular", "#555555", 0, "md"),
-            flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH/mm'), "md", "regular", "#bbbbbb", 0, "sm"),
+            flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH:mm'), "md", "regular", "#bbbbbb", 0, "sm"),
             flex.content_text(task_data[i]["講義名"].substr(0, 10), "md", "regular", "#bbbbbb", 1, "md"),
             flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#bbbbbb", 0, "none")
           ], `redo@${task_data[i]["SerialID"]}`)
@@ -193,9 +176,9 @@ function make_flex_task_data(task_data){
 
     // 同日課題をまとめて追加
     task_data_json.push(
-      flex.content_box_no_action("horizontal", "md", [
+      flex.content_box_noact("horizontal", "md", [
         flex.content_text(`${limit_day_add_this_loop}(${env_data.youbi[task_data[i]["提出日"].getDay()]})`, "sm", "regular", text_color, 0, "sm"),
-        flex.content_box_no_action("vertical", "none", contents_temporary)
+        flex.content_box_noact("vertical", "none", contents_temporary)
       ])
     );
 
@@ -210,7 +193,7 @@ function make_flex_task_data(task_data){
 
   // フッター追加
   task_data_json.push(
-    flex.content_box_no_action("horizontal", "md", [
+    flex.content_box_noact("horizontal", "md", [
       flex.content_text("該当講義名をタップで完了登録ができます。", "xs", "regular", "#aaaaaa", 0, "none")
     ])
   );
@@ -221,41 +204,4 @@ function make_flex_task_data(task_data){
     "other_task_count": other_task_count
   }
   return result;
-}
-
-function make_flex_task_input_form(){
-  let task_data_json = [], contents_temporary = [];
-  task_data_json.push(
-    flex.content_box_no_action("vertical", "none", [
-      flex.content_box_no_action("horizontal", "none", [
-        flex.content_text("講義名：", "md", "regular", "#555555", "0", "none"),
-        flex.content_box_message_on_padding("vertical", "none", "md", "#bbbbbb", "light", "none", [
-          flex.content_text("入力中…", "md", "regular", "#aaaaaa", "0", "none")
-        ], "課題追加@講義名")
-      ]),
-
-      flex.content_box_no_action("horizontal", "md", [
-        flex.content_text("課題名：", "md", "regular", "#555555", "0", "none"),
-        flex.content_box_message_on_padding("vertical", "none", "md", "#bbbbbb", "light", "none", [
-          flex.content_text("タップで入力", "md", "regular", "#aaaaaa", "0", "none")
-        ], "課題追加@課題")
-      ]),
-
-      flex.content_box_no_action("horizontal", "md", [
-        flex.content_text("提出日：", "md", "regular", "#555555", "0", "none"),
-        flex.content_box_timepicker_on_padding("vertical", "none", "md", "#bbbbbb", "light", "none", [
-          flex.content_text("タップで入力", "md", "regular", "#aaaaaa", "0", "none")
-        ], "課題追加@limit")
-      ]),
-
-      flex.content_box_no_action("horizontal", "md", [
-        flex.content_text("繰り返し記録：", "md", "regular", "#555555", "0", "none"),
-        flex.content_box_no_action("vertical", "none", [
-          flex.content_text_message("☑ 一度のみ", "md", "regular", "#555555", "0", "none", "課題追加@mode0"),
-          flex.content_text_message("☐ 今期終了まで一週間おき", "md", "regular", "#555555", "0", "sm", "課題追加@mode1"),
-          flex.content_text_message("☐ 今期終了まで二週間おき", "md", "regular", "#555555", "0", "sm", "課題追加@mode2")
-        ])
-      ])
-    ])
-  )
 }
