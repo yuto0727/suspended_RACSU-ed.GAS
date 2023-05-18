@@ -695,7 +695,7 @@ const flex = {
                     "contents": [
                       {
                         "type": "text",
-                        "text": "設定A",
+                        "text": "設定A（共通教育）",
                         "align": "center",
                         "color": "#FFFFFF",
                         "size": "lg"
@@ -716,7 +716,7 @@ const flex = {
                     "contents": [
                       {
                         "type": "text",
-                        "text": "設定B",
+                        "text": "設定B（専門教育）",
                         "align": "center",
                         "color": "#FFFFFF",
                         "size": "lg"

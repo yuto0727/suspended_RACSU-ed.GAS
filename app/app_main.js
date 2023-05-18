@@ -5,7 +5,7 @@ function doPost(e) {
   // インスタンス作成
   // --------------------------------------------------------------------------------------------
   const lc_main = new LineBotSDK.Client({channelAccessToken:acc_token.main});
-  const lc_contact = new LineBotSDK.Client({channelAccessToken:acc_token.contact});
+  const lc_status = new LineBotSDK.Client({channelAccessToken:acc_token.status});
   const db_task = SSheetDB.open(db_id.task);
   const db_ctrl = SSheetDB.open(db_id.ctrl);
 
@@ -154,7 +154,7 @@ function doPost(e) {
             process_reply_task_list(lc_main, db_task, user_id, user_reply_token);
             
           } else {
-            process_transmit_message(lc_contact, db_ctrl, user_id, user_message);
+            process_transmit_message(lc_status, db_ctrl, user_id, user_message);
           }
         }
 
@@ -178,7 +178,7 @@ function doPost(e) {
     // 処理エラー時例外処理
     // ・該当ユーザーにエラーメッセージを送信
     // --------------------------------------------------------------------------------------------
-    process_error(lc_contact, error, user_id);
+    process_error(lc_status, error, user_id);
     add_error_log(db_ctrl, error);
     add_ctrl_log(db_ctrl, `Error exception happened`);
   }
