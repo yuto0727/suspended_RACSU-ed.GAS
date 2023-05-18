@@ -56,6 +56,8 @@ function set_task_status(db_task, user_id, task_id, task_status){
 }
 
 function save_task(db_task, user_id, task_data){
+  // データ形式
+  // [["講義名", "課題名", "期限（Date）"],...]
   let unique_id_exist = get_all_task_unique_id(db_task, user_id);
   for (let i=0; i<task_data.length; i++){
     const limit = Utilities.formatDate(task_data[i][2], 'Asia/Tokyo', 'yyyy/MM/dd H:mm:ss');

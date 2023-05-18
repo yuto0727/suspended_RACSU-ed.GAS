@@ -772,7 +772,7 @@ const flex = {
     return content;
   },
 
-  task_input: function(step, class_name, task_name, task_limit, mode){
+  task_input: function(step=0, class_name="未記入", task_name="未記入", task_limit=new Date(), mode=0){
     const contents_flame = {
       "type": "bubble",
       "size": "giga",
@@ -812,7 +812,22 @@ const flex = {
           }
           // 送信ボタン配置位置
         ],
-        "paddingAll": "xl"
+        "paddingAll": "xl",
+        "paddingBottom": "none"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "horizontal",
+        "contents": [
+          {
+            "type": "text",
+            "text": "中断は「やめる」と送信してください。",
+            "margin": "md",
+            "color": "#aaaaaa",
+            "size": "xs"
+          }
+        ],
+        "margin": "none"
       }
     }
 
@@ -847,7 +862,7 @@ const flex = {
           "backgroundColor": "#1DB446",
           "action": {
             "type": "message",
-            "text": `課題追加@送信?class=${class_name}&task=${task_name}&limit=${Utilities.formatDate(task_limit, 'Asia/Tokyo', 'MM/dd HH:mm')}&mode=${mode}`
+            "text": `課題追加@送信?class=${class_name}&task=${task_name}&limit=${Utilities.formatDate(task_limit, 'Asia/Tokyo', 'yyyy-MM-dd HH:mm').replace(" ", "T")}&mode=${mode}`
           }
         }
       ],
@@ -1099,7 +1114,7 @@ const flex = {
     if (step == 2){
       contents_form.push(contents_input_form_limit_pickup);
       alert_message = "提出期限を設定してください。";
-    } else {
+    } else if (step >= 2){
       contents_form.push(contents_input_form_limit);
     }
     if (step >= 3){

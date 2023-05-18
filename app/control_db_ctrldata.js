@@ -7,7 +7,9 @@ function get_user_status(db_ctrl, user_id){
     "LINE ID",
     "会員ステータス",
     "処理ステータス",
-    "認証ステータス"
+    "連携ステータス",
+    "認証ステータス",
+    "キャッシュデータ"
   ])
   .where({
     "LINE ID" : ["==", user_id]
@@ -20,10 +22,10 @@ function get_all_linked_user_id(db_ctrl){
   const result = db_ctrl.table("ユーザーデータ")
   .select([
     "LINE ID",
-    "処理ステータス"
+    "連携ステータス"
   ])
   .where({
-    "処理ステータス" : ["==", "連携済み"]
+    "連携ステータス" : ["==", "連携済み"]
   })
   .result();
   return result;
@@ -107,6 +109,7 @@ function add_user(db_ctrl, user_id, user_name){
     "残り日数": "N/A",
     "会員ステータス": "無料",
     "認証ステータス": "未認証",
+    "連携ステータス": "未連携",
     "処理ステータス": "学籍番号送信待ち",
     "キャッシュデータ": "N/A"
   }]);
