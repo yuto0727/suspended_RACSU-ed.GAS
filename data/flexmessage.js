@@ -763,7 +763,7 @@ const flex = {
         "layout": "vertical",
         "contents": task_data_json
       },
-      "modes": {
+      "styles": {
         "footer": {
           "separator": true
         }
@@ -847,7 +847,7 @@ const flex = {
           "backgroundColor": "#1DB446",
           "action": {
             "type": "message",
-            "text": "課題追加@送信"
+            "text": `課題追加@送信?class=${class_name}&task=${task_name}&limit=${Utilities.formatDate(task_limit, 'Asia/Tokyo', 'MM/dd HH:mm')}&mode=${mode}`
           }
         }
       ],
@@ -862,14 +862,6 @@ const flex = {
       "type": "box",
       "layout": "vertical",
       "contents": [
-        {
-          "type": "text",
-          "text": "追加する課題",
-          "align": "center",
-          "size": "lg",
-          "color": "#1DB446",
-          "weight": "bold"
-        },
         {
           "type": "box",
           "layout": "vertical",
@@ -976,6 +968,39 @@ const flex = {
       "margin": "md"
     }
 
+    const contents_input_form_limit_pickup = {
+      "type": "box",
+      "layout": "horizontal",
+      "contents": [
+        {
+          "type": "text",
+          "text": "提出日：",
+          "flex": 0,
+          "gravity": "center"
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "ここをタップして設定",
+               "weight": "bold"
+            }
+          ],
+          "borderColor": "#bbbbbb",
+          "borderWidth": "light",
+          "paddingAll": "md",
+          "action": {
+            "type": "datetimepicker",
+            "mode": "datetime",
+            "data": "課題追加@limit"
+          }
+        }
+      ],
+      "margin": "md"
+    }
+
     const contents_input_form_mode = (mode) => {
       const get_checkbox = (mode, index) => {
         if (index == 0){
@@ -1058,10 +1083,10 @@ const flex = {
         "align": "center"
     })
 
-    const contents_conform = flex.content_box_message("horizontal", "none", [
-      flex.content_text(Utilities.formatDate(task_limit, 'Asia/Tokyo', 'MM/dd HH:mm'), "md", "regular", text_color, 0, "sm"),
-      flex.content_text(task_data[i]["講義名"].substr(0, 10), "md", "regular", "#555555", 1, "md"),
-      flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#555555", 0, "none")
+    const contents_conform = flex.content_box_noact("horizontal", "md", [
+      flex.content_text(Utilities.formatDate(task_limit, 'Asia/Tokyo', 'MM/dd HH:mm'), "lg", "regular", "#555555", 0, "sm"),
+      flex.content_text(class_name.substr(0, 10), "lg", "regular", "#555555", 1, "md"),
+      flex.content_text(task_name.substr(0, 7), "sm", "regular", "#555555", 0, "none")
     ])
 
     const contents_form = []
@@ -1071,15 +1096,20 @@ const flex = {
       contents_form.push(contents_input_form_task);
       alert_message = "課題名を入力してください。";
     }
-    if (step >= 2){
+    if (step == 2){
+      contents_form.push(contents_input_form_limit_pickup);
       alert_message = "提出期限を設定してください。";
+    } else {
       contents_form.push(contents_input_form_limit);
+    }
+    if (step >= 3){
       contents_flame["body"]["contents"][0]["contents"] = contents_form;
       contents_flame["body"]["contents"].push(contents_send_button_enabled);
       contents_flame["body"]["contents"][1]["contents"].splice(1, 0, contents_conform);
+
     }
     // 繰り返し記録は後日実装
-    // if (step >= 3){
+    // if (step >= 4){
     //   contents_form.push(contents_input_form_mode(mode));
     //   contents_flame["body"]["contents"][0]["contents"] = contents_form;
     //   contents_flame["body"]["contents"].push(contents_send_button_enabled);
@@ -1088,14 +1118,14 @@ const flex = {
     else {
       contents_flame["body"]["contents"][0]["contents"] = contents_form;
       contents_flame["body"]["contents"].push(contents_send_button_disabled);
-      contents_flame["body"]["contents"][1]["contents"].splice(1, 0, contents_alert(message=alert_message));
+      contents_flame["body"]["contents"][1]["contents"].splice(0, 0, contents_alert(message=alert_message));
     }
 
-    console.log(JSON.stringify(contents_flame))
+    // console.log(JSON.stringify(contents_flame))
+    return contents_flame;
   },
 
-  // 各要素の生成関数
-  content_box_no_action: function(layout, margin, contents){
+  content_box_noact: function(layout, margin, contents){
     const content = {
       "type": "box",
       "layout": layout,
@@ -1105,21 +1135,7 @@ const flex = {
     return content;
   },
 
-  content_box_on_padding: function(layout, margin, paddingAll, borderColor, borderWidth, cornerRadius, contents){
-    const content = {
-      "type": "box",
-      "layout": layout,
-      "margin": margin,
-      "contents": contents,
-      "paddingAll": paddingAll,
-      "borderColor": borderColor,
-      "borderWidth": borderWidth,
-      "cornerRadius": cornerRadius
-    };
-    return content;
-  },
-
-  content_box_message: function(layout, margin, contents, action_text){
+  content_box_doact: function(layout, margin, contents, action_text){
     const content = {
       "type": "box",
       "layout": layout,
@@ -1129,44 +1145,6 @@ const flex = {
         "type": "message",
         "label": "action",
         "text": action_text
-        }
-    };
-    return content;
-  },
-
-  content_box_message_on_padding: function(layout, margin, paddingAll, borderColor, borderWidth, cornerRadius,  contents, action_text){
-    const content = {
-      "type": "box",
-      "layout": layout,
-      "margin": margin,
-      "contents": contents,
-      "paddingAll": paddingAll,
-      "borderColor": borderColor,
-      "borderWidth": borderWidth,
-      "cornerRadius": cornerRadius,
-      "action": {
-        "type": "message",
-        "label": "action",
-        "text": action_text
-        }
-    };
-    return content;
-  },
-
-  content_box_timepicker_on_padding: function(layout, margin, paddingAll, borderColor, borderWidth, cornerRadius,  contents, action_data){
-    const content = {
-      "type": "box",
-      "layout": layout,
-      "margin": margin,
-      "contents": contents,
-      "paddingAll": paddingAll,
-      "borderColor": borderColor,
-      "borderWidth": borderWidth,
-      "cornerRadius": cornerRadius,
-      "action": {
-        "type": "datetimepicker",
-        "mode": "datetime",
-        "data": action_data
         }
     };
     return content;
@@ -1186,7 +1164,7 @@ const flex = {
     return content;
   },
 
-  content_text: function(text, size, weight, color, flex, margin, align="start"){
+  content_text: function(text, size, weight, color, flex, margin){
     const content = {
       "type": "text",
       "text": text,
@@ -1195,26 +1173,7 @@ const flex = {
       "color": color,
       "flex": flex,
       "gravity": "center",
-      "margin": margin,
-      "align": align
-    };
-    return content;
-  },
-
-  content_text_message: function(text, size, weight, color, flex, margin, action_text){
-    const content = {
-      "type": "text",
-      "text": text,
-      "weight": weight,
-      "size": size,
-      "color": color,
-      "flex": flex,
-      "gravity": "center",
-      "margin": margin,
-      "action": {
-        "type": "message",
-        "text": action_text
-      }
+      "margin": margin
     };
     return content;
   },

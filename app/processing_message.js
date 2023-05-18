@@ -94,6 +94,7 @@ function process_user_policy_agreement(lc_main, db_ctrl, user_id, user_reply_tok
       "contents": flex.link_guide(env_data.fiscal_year().toString(), user_department)
     }]);
     set_user_data(db_ctrl, user_id, "処理ステータス", "連携待ち");
+    set_user_data(db_ctrl, user_id, "認証ステータス", "認証済み");
     set_user_data(db_ctrl, user_id, "キャッシュデータ", "N/A");
 
   } else {
@@ -132,9 +133,9 @@ function process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply
         // 登録済みの学部コードを使って実際にFitchしてみて、正しいデータが取れるか
         // 登録済みの学部と違うURLが送られてきた場合にエラーを出すようにする
         throw new Error("URLの有効性を確認できませんでした。正しいURLを送信してください。");
-
       } else {
         // すべてのエラーチェック通過
+
         if (url_param_department == "g"){
           set_user_data(db_ctrl, user_id, "共通ID", url_param_userid);
           set_user_data(db_ctrl, user_id, "共通Token", url_param_authtoken);
@@ -159,8 +160,7 @@ function process_set_calendar_url(lc_main, db_ctrl, db_task, user_id, user_reply
             "type": "text",
             "text": "eAlpsとの同期を開始しました。\nしばらくお待ち下さい。"
           }]);
-          set_user_data(db_ctrl, user_id, "連携ステータス", "連携済み");
-          set_user_data(db_ctrl, user_id, "処理ステータス", "N/A");
+          set_user_data(db_ctrl, user_id, "処理ステータス", "連携済み");
           process_start_task_auto_get(lc_main, db_ctrl, db_task, user_id);
         }
       }
@@ -264,6 +264,6 @@ function process_transmit_message(lc_status, db_ctrl, user_id, message){
 function process_error(lc_status, error, user_id){
   lc_status.pushMessage(admin_id.status, [{
     "type":"text",
-    "text":`--------------------------\n処理エラーが発生しました。\n${user_id}\n--------------------------\n\n${String(error)}`
+    "text":`処理エラーが発生しました。\nID:${user_id}\n${String(error)}`
   }]);
 }
