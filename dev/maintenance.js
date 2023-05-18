@@ -42,8 +42,11 @@ function maintenance_make_database_sheet(){
 
 function maintenance_insert_sheet(){
   const db = SSheetDB.open(db_id.ctrl);
-  db.createTable("エラーログ",{
-    "タイムスタンプ": "@", 
-    "メッセージ": "@"
+  db.createTable("課題追加",{
+    "SessionID": "@", 
+    "講義名": "@",
+    "課題名": "@",
+    "提出日": "yyyy/mm/dd H:mm:ss",
+    "記録モード": "@"
   });
 }

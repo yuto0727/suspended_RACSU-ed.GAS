@@ -21,10 +21,10 @@ function get_all_linked_user_id(db_ctrl){
   const result = db_ctrl.table("ユーザーデータ")
   .select([
     "LINE ID",
-    "処理ステータス"
+    "連携ステータス"
   ])
   .where({
-    "処理ステータス" : ["==", "連携済み"]
+    "連携ステータス" : ["==", "連携済み"]
   })
   .result();
   return result;
@@ -77,6 +77,18 @@ function get_class_name_data(db_ctrl, class_code){
     add_class_name_data(db_ctrl, class_code, class_name);
   }
   return class_name;
+}
+
+function get_task_make_session(db_ctrl, user_id){
+  const data = db_ctrl.table("課題追加")
+  .select([
+    "*"
+  ])
+  .where({
+    "LINE ID" : ["==", user_id]
+  })
+  .result()[0];
+  return data;
 }
 // --------------------------------------------------------------------------------------------
 
@@ -131,6 +143,15 @@ function add_error_log(db_ctrl, error){
     "エラーメッセージ": error
   }]);
 }
+
+function add_task_make_session(db_ctrl, user_id){
+  db_ctrl.table("課題追加")
+  .insert([{
+    "LINE ID": user_id,
+    "カーソル位置": "講義名",
+    "記録モード": 0
+  }]);
+}
 // --------------------------------------------------------------------------------------------
 
 
@@ -142,6 +163,17 @@ function set_user_data(db_ctrl, user_id, index, value){
   const data = {};
   data[index] = value;
   db_ctrl.table("ユーザーデータ")
+  .update(
+    data,
+  {
+    "LINE ID" : ["==", user_id]
+  });
+}
+
+function set_task_make_session_data(db_ctrl, user_id, index, value){
+  const data = {};
+  data[index] = value;
+  db_ctrl.table("課題追加")
   .update(
     data,
   {
@@ -206,5 +238,11 @@ function erasure_user(db_ctrl, user_id){
     "LINE ID" : ["==", user_id]
   });
   delete_task_sheet(user_id);
+}
+
+function erasure_task_make_session(db_ctrl, user_id){
+  db_ctrl.table("課題追加").deleteRow({
+    "LINE ID" : ["==", user_id]
+  });
 }
 // --------------------------------------------------------------------------------------------

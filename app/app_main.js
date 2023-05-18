@@ -158,11 +158,76 @@ function doPost(e) {
             set_task_status(db_task, user_id, task_id, "未");
             process_reply_task_list(lc_main, db_task, user_id, user_reply_token);
 
-          } else if (user_message == "課題を追加"){
-            lc_main.replyMessage(user_reply_token, {
-              "type": "text",
-              "text": "課題がある講義名を\n送信してください。\n「やめる」で取り消し"
-            });
+          // 課題追加関連処理
+          } else if (user_message.includes("課題追加@")){
+
+            // 課題追加フォーム新規送信
+            if (user_message.includes("新規フォーム送信")){
+              set_user_data(db_ctrl, user_id, "処理ステータス", `課題追加中`);
+              add_task_make_session(db_ctrl, user_id);
+              lc_main.pushMessage(user_id, [{
+                "type": "flex",
+                "altText": "課題追加フォーム",
+                "contents":
+                  flex.task_input("入力中…", "未入力", "未入力", 0,
+                    flex.content_text("講義名を入力してください", "md", "regular", "#555555", 0, "none", "center"),
+                  false)
+              },{
+                "type": "text",
+                "text": `キーボードを開き、追加する課題の講義名を入力してください。`
+              }]);
+            
+            // 書き込みモード変更処理
+            } else if (user_status["処理ステータス"].includes("課題追加中") && user_message.includes("@mode")){
+              const recode_mode = Number(user_message.replace("課題追加@mode", ""));
+              const task_data = get_task_make_session(db_ctrl, user_id);
+              set_task_make_session_data(db_ctrl, user_id, "記録モード", recode_mode);
+              lc_main.pushMessage(user_id, [{
+                "type": "flex",
+                "altText": "課題追加フォーム",
+                "contents":
+                  flex.task_input(user_message, "入力中…", "未入力", recode_mode,
+                    flex.content_text("課題名を入力してください", "md", "regular", "#555555", 0, "none", "center"),
+                  false)
+              },{
+                "type": "text",
+                "text": `キーボードを開き、追加する課題名を入力してください。`
+              }]);
+
+            // その他メッセージ
+            } else {
+              const task_data = get_task_make_session(db_ctrl, user_id);
+              if (task_data["カーソル位置"] == "講義名"){
+                set_task_make_session_data(db_ctrl, user_id, "講義名", user_message);
+                set_task_make_session_data(db_ctrl, user_id, "カーソル位置", "課題名");
+                lc_main.pushMessage(user_id, [{
+                "type": "flex",
+                "altText": "課題追加フォーム",
+                "contents":
+                  flex.task_input(user_message, "入力中…", "未入力", Number(task_data["記録モード"]),
+                    flex.content_text("課題名を入力してください", "md", "regular", "#555555", 0, "none", "center"),
+                  false)
+              },{
+                "type": "text",
+                "text": `キーボードを開き、追加する課題名を入力してください。`
+              }]);
+
+              } else if (task_data["カーソル位置"] == "課題名"){
+                set_task_make_session_data(db_ctrl, user_id, "課題名", user_message);
+                set_task_make_session_data(db_ctrl, user_id, "カーソル位置", "提出日");
+                lc_main.pushMessage(user_id, [{
+                  "type": "flex",
+                  "altText": "課題追加フォーム",
+                  "contents":
+                    flex.task_input(task_data["講義名"], user_message, "タップで入力", Number(task_data["記録モード"]),
+                      flex.content_text("提出日を入力してください", "md", "regular", "#555555", 0, "none", "center"),
+                    false)
+                },{
+                  "type": "text",
+                  "text": `提出日欄をタップし、日付を送信してください。`
+                }]);
+              }
+            }
 
 
 
@@ -170,22 +235,19 @@ function doPost(e) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+          // 動作中止メッセージ
+          } else if (user_message == "やめる") {
+            if (user_status["処理ステータス"].includes("課題追加中")){
+              set_user_data(db_ctrl, user_id, "処理ステータス", `N/A`);
+              erasure_task_make_session(db_ctrl, user_id);
+              
+            }
 
           // その他のメッセージ
           // → 管理アカウントに転送
           } else {
             process_transmit_message(lc_status, db_ctrl, user_id, user_message);
+
           }
         }
 
@@ -210,7 +272,7 @@ function doPost(e) {
     // ・該当ユーザーにエラーメッセージを送信
     // --------------------------------------------------------------------------------------------
     process_error(lc_status, error, user_id);
-    add_error_log(db_ctrl, error);
+    add_error_log(db_ctrl, String(error));
     add_ctrl_log(db_ctrl, `Error exception happened`);
   }
 }

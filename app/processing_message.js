@@ -264,6 +264,6 @@ function process_transmit_message(lc_status, db_ctrl, user_id, message){
 function process_error(lc_status, error, user_id){
   lc_status.pushMessage(admin_id.status, [{
     "type":"text",
-    "text":`処理エラーが発生しました。\nID:${user_id}\n${String(error)}`
+    "text":`--------------------------\n処理エラーが発生しました。\n${user_id}\n--------------------------\n\n${String(error)}`
   }]);
 }

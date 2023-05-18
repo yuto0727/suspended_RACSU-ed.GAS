@@ -173,7 +173,7 @@ function make_flex_task_data(task_data){
         contents_temporary.push(
           flex.content_box_message("horizontal", "none", [
             flex.content_text("☑", "md", "regular", "#555555", 0, "md"),
-            flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH/mm'), "md", "regular", "#bbbbbb", 0, "sm"),
+            flex.content_text(Utilities.formatDate(task_data[i]["提出日"], 'Asia/Tokyo', 'HH:mm'), "md", "regular", "#bbbbbb", 0, "sm"),
             flex.content_text(task_data[i]["講義名"].substr(0, 10), "md", "regular", "#bbbbbb", 1, "md"),
             flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#bbbbbb", 0, "none")
           ], `redo@${task_data[i]["SerialID"]}`)

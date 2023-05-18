@@ -763,7 +763,7 @@ const flex = {
         "layout": "vertical",
         "contents": task_data_json
       },
-      "styles": {
+      "modes": {
         "footer": {
           "separator": true
         }
@@ -772,8 +772,8 @@ const flex = {
     return content;
   },
 
-  task_input: function(){
-    const content = {
+  task_input: function(step, class_name, task_name, task_limit, mode){
+    const contents_flame = {
       "type": "bubble",
       "size": "giga",
       "header": {
@@ -804,207 +804,295 @@ const flex = {
           {
             "type": "box",
             "layout": "vertical",
-            "contents": [
-              {
-                "type": "box",
-                "layout": "horizontal",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "講義名：",
-                    "flex": 0,
-                    "gravity": "center"
-                  },
-                  {
-                    "type": "box",
-                    "layout": "vertical",
-                    "contents": [
-                      {
-                        "type": "text",
-                        "text": "入力中…",
-                        "color": "#aaaaaa"
-                      }
-                    ],
-                    "borderColor": "#bbbbbb",
-                    "borderWidth": "light",
-                    "paddingAll": "md",
-                    "action": {
-                      "type": "message",
-                      "text": "課題追加@講義名"
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "box",
-                "layout": "horizontal",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "課題名：",
-                    "flex": 0,
-                    "gravity": "center"
-                  },
-                  {
-                    "type": "box",
-                    "layout": "vertical",
-                    "contents": [
-                      {
-                        "type": "text",
-                        "text": "タップで入力",
-                        "color": "#aaaaaa"
-                      }
-                    ],
-                    "borderColor": "#bbbbbb",
-                    "borderWidth": "light",
-                    "paddingAll": "md",
-                    "action": {
-                      "type": "message",
-                      "text": "課題追加＠課題名"
-                    }
-                  }
-                ],
-                "margin": "md"
-              },
-              {
-                "type": "box",
-                "layout": "horizontal",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "提出日：",
-                    "flex": 0,
-                    "gravity": "center"
-                  },
-                  {
-                    "type": "box",
-                    "layout": "vertical",
-                    "contents": [
-                      {
-                        "type": "text",
-                        "text": "タップで入力",
-                        "color": "#aaaaaa"
-                      }
-                    ],
-                    "borderColor": "#bbbbbb",
-                    "borderWidth": "light",
-                    "paddingAll": "md",
-                    "action": {
-                      "type": "datetimepicker",
-                      "mode": "datetime",
-                      "data": "課題追加@limit"
-                    }
-                  }
-                ],
-                "margin": "md"
-              },
-              {
-                "type": "box",
-                "layout": "horizontal",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "繰り返し記録：",
-                    "flex": 0,
-                    "gravity": "center"
-                  },
-                  {
-                    "type": "box",
-                    "layout": "vertical",
-                    "contents": [
-                      {
-                        "type": "text",
-                        "text": "☑ 一度のみ",
-                        "gravity": "center",
-                        "action": {
-                          "type": "message",
-                          "text": "課題追加@mode0"
-                        }
-                      },
-                      {
-                        "type": "text",
-                        "text": "☐ 今期終了まで一週間おき",
-                        "gravity": "center",
-                        "margin": "sm",
-                        "action": {
-                          "type": "message",
-                          "text": "課題追加@mode1"
-                        }
-                      },
-                      {
-                        "type": "text",
-                        "text": "☐ 今期終了まで二週間おき",
-                        "gravity": "center",
-                        "margin": "sm",
-                        "action": {
-                          "type": "message",
-                          "text": "課題追加@mode2"
-                        }
-                      }
-                    ],
-                    "margin": "md"
-                  }
-                ],
-                "margin": "md"
-              }
-            ],
+            // 課題追加フォーム配置位置
             "paddingAll": "lg",
             "borderColor": "#1b5aad",
             "borderWidth": "medium",
             "cornerRadius": "md"
-          },
+          }
+          // 送信ボタン配置位置
+        ],
+        "paddingAll": "xl"
+      }
+    }
 
+    const contents_send_button_enabled = {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "追加する課題",
+          "align": "center",
+          "size": "lg",
+          "color": "#1DB446",
+          "weight": "bold"
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "この内容で記録する",
+              "size": "lg",
+              "align": "center",
+              "gravity": "center",
+              "color": "#ffffff"
+            }
+          ],
+          "paddingAll": "lg",
+          "margin": "md",
+          "cornerRadius": "md",
+          "backgroundColor": "#1DB446",
+          "action": {
+            "type": "message",
+            "text": "課題追加@送信"
+          }
+        }
+      ],
+      "borderColor": "#1b5aad",
+      "cornerRadius": "md",
+      "borderWidth": "medium",
+      "margin": "md",
+      "paddingAll": "md"
+    }
+
+    const contents_send_button_disabled = {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "追加する課題",
+          "align": "center",
+          "size": "lg",
+          "color": "#1DB446",
+          "weight": "bold"
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "この内容で記録する",
+              "size": "lg",
+              "align": "center",
+              "gravity": "center",
+              "color": "#ffffff"
+            }
+          ],
+          "paddingAll": "lg",
+          "margin": "md",
+          "cornerRadius": "md",
+          "backgroundColor": "#cccccc",
+        }
+      ],
+      "borderColor": "#1b5aad",
+      "cornerRadius": "md",
+      "borderWidth": "medium",
+      "margin": "md",
+      "paddingAll": "md"
+    }
+
+    const contents_input_form_class = {
+      "type": "box",
+      "layout": "horizontal",
+      "contents": [
+        {
+          "type": "text",
+          "text": "講義名：",
+          "flex": 0,
+          "gravity": "center"
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": `${class_name}`,
+            }
+          ],
+          "borderColor": "#bbbbbb",
+          "borderWidth": "light",
+          "paddingAll": "md"
+        }
+      ]
+    }
+
+    const contents_input_form_task = {
+      "type": "box",
+      "layout": "horizontal",
+      "contents": [
+        {
+          "type": "text",
+          "text": "課題名：",
+          "flex": 0,
+          "gravity": "center"
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": `${task_name}`,
+            }
+          ],
+          "borderColor": "#bbbbbb",
+          "borderWidth": "light",
+          "paddingAll": "md"
+        }
+      ],
+      "margin": "md"
+    }
+
+    const contents_input_form_limit = {
+      "type": "box",
+      "layout": "horizontal",
+      "contents": [
+        {
+          "type": "text",
+          "text": "提出日：",
+          "flex": 0,
+          "gravity": "center"
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": `${Utilities.formatDate(task_limit, 'Asia/Tokyo', 'MM/dd HH:mm')}`,
+            }
+          ],
+          "borderColor": "#bbbbbb",
+          "borderWidth": "light",
+          "paddingAll": "md"
+        }
+      ],
+      "margin": "md"
+    }
+
+    const contents_input_form_mode = (mode) => {
+      const get_checkbox = (mode, index) => {
+        if (index == 0){
+          if (mode == 0){
+            return "☑一度のみ"
+          } else {
+            return "☐一度のみ"
+          }
+        } else if (index == 1){
+          if (mode == 1){
+            return "☑今期終了まで一週間おき"
+          } else {
+            return "☐今期終了まで一週間おき"
+          }
+        } else if (index == 2){
+          if (mode == 2){
+            return "☑今期終了まで二週間おき"
+          } else {
+            return "☐今期終了まで二週間おき"
+          }
+        }
+      }
+
+      const result = {
+        "type": "box",
+        "layout": "horizontal",
+        "contents": [
+          {
+            "type": "text",
+            "text": "繰り返し記録：",
+            "flex": 0,
+            "gravity": "center"
+          },
           {
             "type": "box",
             "layout": "vertical",
             "contents": [
               {
                 "type": "text",
-                "text": "追加する課題",
-                "align": "center",
-                "size": "lg",
-                "color": "#1DB446",
-                "weight": "bold"
+                "text": `${get_checkbox(mode, index=0)}`,
+                "gravity": "center",
+                "action": {
+                  "type": "message",
+                  "text": "課題追加@mode0"
+                }
               },
               {
                 "type": "text",
-                "text": "※ 課題詳細を入力してください",
-                "align": "center"
+                "text": `${get_checkbox(mode, index=1)}`,
+                "gravity": "center",
+                "margin": "sm",
+                "action": {
+                  "type": "message",
+                  "text": "課題追加@mode1"
+                }
               },
               {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "この内容で記録する",
-                    "size": "lg",
-                    "align": "center",
-                    "gravity": "center",
-                    "color": "#ffffff"
-                  }
-                ],
-                "backgroundColor": "#bbbbbb",
-                "paddingAll": "lg",
-                "margin": "md",
-                "cornerRadius": "md"
+                "type": "text",
+                "text": `${get_checkbox(mode, index=2)}`,
+                "gravity": "center",
+                "margin": "sm",
+                "action": {
+                  "type": "message",
+                  "text": "課題追加@mode2"
+                }
               }
             ],
-            "borderColor": "#1b5aad",
-            "cornerRadius": "md",
-            "borderWidth": "medium",
-            "margin": "md",
-            "paddingAll": "md"
+            "margin": "md"
           }
         ],
-        "paddingAll": "xl"
+        "margin": "md"
       }
+
+      return result;
     }
-    return content;
+
+    const contents_alert = (message) => ({
+        "type": "text",
+        "text": `${message}`,
+        "align": "center"
+    })
+
+    const contents_conform = flex.content_box_message("horizontal", "none", [
+      flex.content_text(Utilities.formatDate(task_limit, 'Asia/Tokyo', 'MM/dd HH:mm'), "md", "regular", text_color, 0, "sm"),
+      flex.content_text(task_data[i]["講義名"].substr(0, 10), "md", "regular", "#555555", 1, "md"),
+      flex.content_text(task_data[i]["課題名"].substr(0, 7), "sm", "regular", "#555555", 0, "none")
+    ])
+
+    const contents_form = []
+    let alert_message = "講義名を送信してください。";
+    contents_form.push(contents_input_form_class);
+    if (step >= 1){
+      contents_form.push(contents_input_form_task);
+      alert_message = "課題名を入力してください。";
+    }
+    if (step >= 2){
+      alert_message = "提出期限を設定してください。";
+      contents_form.push(contents_input_form_limit);
+      contents_flame["body"]["contents"][0]["contents"] = contents_form;
+      contents_flame["body"]["contents"].push(contents_send_button_enabled);
+      contents_flame["body"]["contents"][1]["contents"].splice(1, 0, contents_conform);
+    }
+    // 繰り返し記録は後日実装
+    // if (step >= 3){
+    //   contents_form.push(contents_input_form_mode(mode));
+    //   contents_flame["body"]["contents"][0]["contents"] = contents_form;
+    //   contents_flame["body"]["contents"].push(contents_send_button_enabled);
+
+    // } 
+    else {
+      contents_flame["body"]["contents"][0]["contents"] = contents_form;
+      contents_flame["body"]["contents"].push(contents_send_button_disabled);
+      contents_flame["body"]["contents"][1]["contents"].splice(1, 0, contents_alert(message=alert_message));
+    }
+
+    console.log(JSON.stringify(contents_flame))
   },
-
-
-
 
   // 各要素の生成関数
   content_box_no_action: function(layout, margin, contents){
@@ -1098,7 +1186,7 @@ const flex = {
     return content;
   },
 
-  content_text: function(text, size, weight, color, flex, margin){
+  content_text: function(text, size, weight, color, flex, margin, align="start"){
     const content = {
       "type": "text",
       "text": text,
@@ -1107,7 +1195,8 @@ const flex = {
       "color": color,
       "flex": flex,
       "gravity": "center",
-      "margin": margin
+      "margin": margin,
+      "align": align
     };
     return content;
   },

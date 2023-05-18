@@ -86,5 +86,4 @@ function delete_task_sheet(user_id){
 
   spreadsheet.deleteSheet(sheet_A);
   spreadsheet.getSheetByName("%INDEX%").deleteRow(data.indexOf(user_id) + 1)
-
 }
