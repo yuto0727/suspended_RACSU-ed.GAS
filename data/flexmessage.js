@@ -999,8 +999,9 @@ const flex = {
           "contents": [
             {
               "type": "text",
-              "text": "ここをタップして設定",
-               "weight": "bold"
+              "text": "→ここをタップして設定←",
+              "weight": "bold",
+              "color": "#ff0000"
             }
           ],
           "borderColor": "#bbbbbb",
