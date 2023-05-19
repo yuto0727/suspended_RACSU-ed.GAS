@@ -31,6 +31,18 @@ function get_all_linked_user_id(db_ctrl){
   return result;
 }
 
+function get_all_user_id(db_ctrl){
+  const result = db_ctrl.table("ユーザーデータ")
+  .select([
+    "LINE ID",
+  ])
+  .result();
+
+  const keys   = Object.keys(result[0]);
+  const values = result.map(user => keys.map(key => user[key])).flat();
+  return values;
+}
+
 function get_user_data(db_ctrl, user_id, index){
   const data = db_ctrl.table("ユーザーデータ")
   .select([
