@@ -1130,7 +1130,7 @@ const flex = {
     //   contents_flame["body"]["contents"][0]["contents"] = contents_form;
     //   contents_flame["body"]["contents"].push(contents_send_button_enabled);
 
-    // } 
+    // }
     else {
       contents_flame["body"]["contents"][0]["contents"] = contents_form;
       contents_flame["body"]["contents"].push(contents_send_button_disabled);
@@ -1141,7 +1141,7 @@ const flex = {
     return contents_flame;
   },
 
-  content_box_noact: function(layout, margin, contents){
+  content_box_noact: (layout, margin, contents) => {
     const content = {
       "type": "box",
       "layout": layout,
@@ -1151,7 +1151,7 @@ const flex = {
     return content;
   },
 
-  content_box_doact: function(layout, margin, contents, action_text){
+  content_box_doact: (layout, margin, contents, action_text) => {
     const content = {
       "type": "box",
       "layout": layout,
@@ -1166,7 +1166,7 @@ const flex = {
     return content;
   },
 
-  content_box_postback: function(layout, margin, contents, post_data){
+  content_box_postback: (layout, margin, contents, post_data) => {
     const content = {
       "type": "box",
       "layout": layout,
@@ -1180,7 +1180,7 @@ const flex = {
     return content;
   },
 
-  content_text: function(text, size, weight, color, flex, margin){
+  content_text: (text, size, weight, color, flex, margin) => {
     const content = {
       "type": "text",
       "text": text,
@@ -1194,7 +1194,7 @@ const flex = {
     return content;
   },
 
-  content_separator: function(margin){
+  content_separator: (margin) => {
     var content = {
       "type": "separator",
       "margin": margin

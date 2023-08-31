@@ -1,14 +1,15 @@
-function make_task_sheet(db_task, user_id){
-  db_task.createTable(user_id,{
-    "SerialID": "@",
-    "UniqueID": "@",
-    "SubmissionID": "@",
-    "講義名": "@",
-    "課題名": "@",
-    "提出日": "yyyy/mm/dd H:mm:ss",
-    "完了": "@"
-  });
-}
+// 移行完了
+// function make_task_sheet(db_task, user_id){
+//   db_task.createTable(user_id,{
+//     "SerialID": "@",
+//     "UniqueID": "@",
+//     "SubmissionID": "@",
+//     "講義名": "@",
+//     "課題名": "@",
+//     "提出日": "yyyy/mm/dd H:mm:ss",
+//     "完了": "@"
+//   });
+// }
 
 function get_all_task(db_task, user_id){
   const result = db_task.table(user_id)
@@ -80,13 +81,14 @@ function save_task(db_task, user_id, task_data){
   }
 }
 
-function delete_task_sheet(user_id){
-  const spreadsheet = SpreadsheetApp.openById(db_id.task);
-  const sheet_A = spreadsheet.getSheetByName(user_id);
-  const sheet_B = spreadsheet.getSheetByName("%INDEX%");
-  const data = sheet_B.getRange(1, 1, sheet_B.getLastRow()).getValues().flat();
+// 以降不要
+// function delete_task_sheet(user_id){
+//   const spreadsheet = SpreadsheetApp.openById(db_id.task);
+//   const sheet_A = spreadsheet.getSheetByName(user_id);
+//   const sheet_B = spreadsheet.getSheetByName("%INDEX%");
+//   const data = sheet_B.getRange(1, 1, sheet_B.getLastRow()).getValues().flat();
 
-  spreadsheet.deleteSheet(sheet_A);
-  spreadsheet.getSheetByName("%INDEX%").deleteRow(data.indexOf(user_id) + 1)
+//   spreadsheet.deleteSheet(sheet_A);
+//   spreadsheet.getSheetByName("%INDEX%").deleteRow(data.indexOf(user_id) + 1)
 
-}
+// }

@@ -1,4 +1,4 @@
-function update_task_data(db_ctrl, db_task, user_id){
+efunction update_task_data(db_ctrl, db_task, user_id){
   const user_eapls_data = get_user_ealps_data(db_ctrl, user_id);
 
   // 共通教育を更新
